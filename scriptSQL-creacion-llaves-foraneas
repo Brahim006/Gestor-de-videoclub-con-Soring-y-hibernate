@@ -1,0 +1,8 @@
+ALTER TABLE pelicula ADD FOREIGN KEY (id_genero)
+REFERENCES genero(id_genero);
+ALTER TABLE PUBLIC.alquiler ADD FOREIGN KEY (id_cliente)
+REFERENCES PUBLIC.cliente(id_cliente);
+ALTER TABLE PUBLIC.alquiler ADD FOREIGN KEY (id_pelicula)
+REFERENCES PUBLIC.pelicula(id_pelicula);
+ALTER TABLE PUBLIC.alquiler ADD FOREIGN KEY (id_promocion)
+REFERENCES PUBLIC.promocion(id_promocion);

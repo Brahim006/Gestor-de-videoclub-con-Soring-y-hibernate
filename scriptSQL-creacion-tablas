@@ -1,0 +1,21 @@
+CREATE TABLE cliente (
+	id_cliente INTEGER PRIMARY KEY,
+	nombre VARCHAR (255) NOT NULL);
+CREATE TABLE promocion (
+	id_promocion INTEGER PRIMARY KEY,
+	descuento INTEGER,
+	descripcion VARCHAR (255) NOT NULL);
+CREATE TABLE genero (
+	id_genero INTEGER PRIMARY KEY,
+	descripcion VARCHAR(255) NOT NULL);
+CREATE TABLE pelicula (
+	id_pelicula INTEGER PRIMARY KEY,
+	id_genero INTEGER,
+	titulo VARCHAR (255) NOT NULL,
+	copias INTEGER);
+CREATE TABLE alquiler (
+	id_cliente INTEGER,
+	id_pelicula INTEGER,
+	fecha DATE NOT NULL,
+	id_promocion INTEGER,
+	dias INTEGER);
