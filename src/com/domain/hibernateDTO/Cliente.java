@@ -36,6 +36,14 @@ public class Cliente {
         inverseJoinColumns = { @JoinColumn(name="id_pelicula") })
     private Collection<Pelicula> peliculas = new ArrayList<>();
     
+    // Join table para encapsular la relación con la tabla Promocion
+    @ManyToMany
+    @JoinTable(
+            name="alquiler",
+            joinColumns = { @JoinColumn(name="id_cliente") },
+            inverseJoinColumns = { @JoinColumn(name="id_promocion") })
+    private Collection<Promocion> promociones = new ArrayList<>();
+    
     // Setters y Getters
 
     public int getIdCliente() {
@@ -60,6 +68,14 @@ public class Cliente {
 
     public void setPeliculas(Collection<Pelicula> peliculas) {
         this.peliculas = peliculas;
+    }
+
+    public Collection<Promocion> getPromociones() {
+        return promociones;
+    }
+
+    public void setPromociones(Collection<Promocion> promociones) {
+        this.promociones = promociones;
     }
     
 }

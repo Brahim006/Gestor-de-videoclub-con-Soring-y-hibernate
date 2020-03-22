@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-
-
-<root>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
     
-</root>
+    <!--Beans para la configuración de Hibernate-->
+    <bean id="myDataSource"
+          class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+          <property name="driverClassName" value="org.hsqldc.jdbcDriver"/>
+          <property name="url" 
+                    value="jdbc:hsqldb:hsql://localhost/gestorvideosdb"/>
+          <property name="username" value="sa"/>
+          <property name="password" value=""/>
+    </bean>
+    
+    <bean id="mySessionFactory" class=
+   "org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="myDataSource"/>
+        <property name="annotatedClass">
+            <list>
+                <value>
+                    <!--Agregar después los DTOs-->
+                </value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <list>
+                <value>
+                    hibernate.dialog=org.hibernate.dialect.HSQLDialect
+                </value>
+            </list>
+        </property>
+    </bean>
+
+    <!--Beans para la inyección de objetos-->
+
+</beans>

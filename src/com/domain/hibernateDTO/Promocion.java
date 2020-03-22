@@ -7,6 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  *
@@ -25,6 +30,14 @@ public class Promocion {
     
     @Column(name="descripcion")
     private String descripcion;
+    
+    // JoinTable para encapsular la relación con la tabla Cliente
+    @ManyToMany
+    @JoinTable(
+            name="alquiler",
+            joinColumns = { @JoinColumn(name="id_promocion") },
+            inverseJoinColumns = { @JoinColumn(name="id_cliente") })
+    private Collection<Cliente> clientes =  new ArrayList<>();
 
     // Setters y Getters
 
