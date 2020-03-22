@@ -3,7 +3,7 @@
  * alquiler en el cual la combinación id_pelicula, id_cliente y fecha es
  * única
  */
-package com.domain.hibernateDTO;
+package com.domain.hibernate.DTO;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Column;

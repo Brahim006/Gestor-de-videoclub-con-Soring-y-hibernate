@@ -1,7 +1,7 @@
 /*
  * Clase que mappea a la tabla "alquiler" en la base de datos
  */
-package com.domain.hibernateDTO;
+package com.domain.hibernate.DTO;
 
 import javax.persistence.Entity;
 import javax.persistence.Column;
