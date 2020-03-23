@@ -22,12 +22,12 @@ public interface Facade {
     /**
      * Retorna un cliente según su ID
      * @param id ID que identifica al cliente.
-     * @return Un objeto Cliente según el ID especificado o null en caso de
-     * que dicho cliente no exista.
+     * @return Una volección de objetos Cliente según el ID especificado o null 
+     * en caso de que no haya coincidencias.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Cliente obtenerClientePorId(int id) throws SQLException;
+    public Collection<Cliente> obtenerCliente(int id) throws SQLException;
     
     /**
      * Retorna uno ó más clientes cuyos nombres sean iguales ó coincidan en sus
@@ -39,7 +39,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Cliente> obtenerClientePorNombre(String nombre)
+    public Collection<Cliente> obtenerCliente(String nombre)
                                                             throws SQLException;
     
     /**
@@ -54,25 +54,12 @@ public interface Facade {
     /**
      * Retorna una Promoción según su ID
      * @param id ID única de la promoción
-     * @return Un objeto Promocion que cumpla con el criterio de búsqueda ó
-     * null si no hubo coincidencias.
+     * @return Una colección de objetos Promocion que cumpla con el criterio de 
+     * búsqueda ó null si no hubo coincidencias.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Promocion obtenerPromocionPorId(int id) throws SQLException;
-    
-    /**
-     * Retorna todas las promociones que hagan un descuento con el monto
-     * especificado.
-     * @param monto Monto de descuento sobre el cual se quieren buscar
-     * promociones.
-     * @return Una colección con todas las promociones que cumplan con el
-     * criterio de búsqueda ó null en el caso de que no haya coincidencias.
-     * @throws java.sql.SQLException Arroja una excepción al tener problemas al
-     * conectarse a la base de datos ó al realizar consultas/modificaciones.
-     */
-    public Collection<Promocion> obtenerPromocionPorMonto(int monto) 
-                                                            throws SQLException;
+    public Collection<Promocion> obtenerPromocion(int id) throws SQLException;
     
     /**
      * Retorna todas las promociones que hagan un descuento que se encuentre en
@@ -84,7 +71,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Promocion> obtenerPromocionPorRango(int min, int max)
+    public Collection<Promocion> obtenerPromocion(int min, int max)
                                                             throws SQLException;
     
     /**
@@ -100,12 +87,12 @@ public interface Facade {
     /**
      * Retorna un genero según su id.
      * @param id ID único del genero buscado.
-     * @return Un objeto Genero según el criterio de búsqueda ó null en el 
-     * caso de que no hayan coincidencias.
+     * @return Una colección de objetos Genero según el criterio de búsqueda ó 
+     * null en el caso de que no hayan coincidencias.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Genero obtenerGeneroPorId(int id) throws SQLException;
+    public Collection<Genero> obtenerGenero(int id) throws SQLException;
     
     /**
      * Retorna una colección de géneros por su descripción ó las primeras letras
@@ -116,7 +103,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Genero> obtenerGeneroPorDescripcion(String descripcion)
+    public Collection<Genero> obtenerGenero(String descripcion)
                                                             throws SQLException;
     
     /**
@@ -132,12 +119,12 @@ public interface Facade {
     /**
      * Retorna una película desde la base de datos según su ID.
      * @param id ID único de la película
-     * @return Un objeto Pelicula que cumple con los criterios de búsqueda ó
-     * null en caso de que no haya coincidencias.
+     * @return Una colección de objetos Pelicula que cumple con los criterios de 
+     * búsqueda ó null en caso de que no haya coincidencias.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Pelicula obtenerPeliculaPorId(int id) throws SQLException;
+    public Collection<Pelicula> obtenerPelicula(int id) throws SQLException;
     
     /**
      * Retorna una película desde la base de datos según las primeras letras de
@@ -148,7 +135,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Pelicula> obtenerPeliculaPorTitulo(String titulo)
+    public Collection<Pelicula> obtenerPelicula(String titulo)
                                                             throws SQLException;
     
     /**
@@ -169,7 +156,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Alquiler> obtenerAlquilerPorCliente(Cliente cliente)
+    public Collection<Alquiler> obtenerAlquiler(Cliente cliente)
                                                             throws SQLException;
     
     /**
@@ -181,7 +168,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Alquiler> obtenerAlquilerPorPelicula(Pelicula pelicula)
+    public Collection<Alquiler> obtenerAlquiler(Pelicula pelicula)
                                                             throws SQLException;
     
     /**
@@ -193,7 +180,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Alquiler> obtenerAlquilerPorFecha(Date fecha)
+    public Collection<Alquiler> obtenerAlquiler(Date fecha)
                                                             throws SQLException;
     
     /**
@@ -206,7 +193,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Alquiler> obtenerAlquilerPorDias(int dias)
+    public Collection<Alquiler> obtenerAlquiler(int dias)
                                                             throws SQLException;
     
     /**
@@ -218,7 +205,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Alquiler> obtenerAlquilerPorPromocion(Promocion promocion)
+    public Collection<Alquiler> obtenerAlquiler(Promocion promocion)
                                                             throws SQLException;
     
     /**
@@ -231,8 +218,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Alquiler obtenerAlquilerPorClavePrimaria(AlquilerPK pk)
-                                                            throws SQLException;
+    public Alquiler obtenerAlquiler(AlquilerPK pk) throws SQLException;
     
     /**
      * Inserta una fila en la tabla Alquiler con las características indicadas
@@ -251,6 +237,8 @@ public interface Facade {
     public boolean crearAlquiler(AlquilerPK pk, Promocion promocion, int dias)
                                                             throws SQLException;
     
+    // Métodos que usan una relación many-to-many
+    
     /**
      * Retorna todos los clientes que hayan alquilado cierta película
      * @param pelicula Un objeto Pelicula sobre la cual se quiera consultar
@@ -260,7 +248,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Cliente> obtenerClientesPorPelicula(Pelicula pelicula)
+    public Collection<Cliente> obtenerClientes(Pelicula pelicula)
                                                             throws SQLException;
     
     /**
@@ -272,7 +260,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Pelicula> obtenerPeliculasPorCliente(Cliente cliente)
+    public Collection<Pelicula> obtenerPeliculas(Cliente cliente)
                                                             throws SQLException;
     
     /**
@@ -285,7 +273,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Promocion> obtenerPromocionesPorCliente(Cliente cliente)
+    public Collection<Promocion> obtenerPromociones(Cliente cliente)
                                                             throws SQLException;
                                                         
     /**
@@ -298,7 +286,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Cliente> obtenerClientesPorPromocion(Promocion promocion)
+    public Collection<Cliente> obtenerClientes(Promocion promocion)
                                                             throws SQLException;
     
 }
