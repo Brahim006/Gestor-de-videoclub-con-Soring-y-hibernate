@@ -64,5 +64,13 @@ public class Promocion {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public Collection<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(Collection<Cliente> clientes) {
+        this.clientes = clientes;
+    }
     
 }

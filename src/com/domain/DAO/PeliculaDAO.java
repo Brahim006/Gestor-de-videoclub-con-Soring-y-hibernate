@@ -40,11 +40,10 @@ public interface PeliculaDAO {
     /**
      * Inserta una película en la base de datos.
      * @param pelicula Objeto Pelicula que representa la fila a ser insertada.
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearPelicula(Pelicula pelicula) throws SQLException;
+    public void crearPelicula(Pelicula pelicula) throws SQLException;
     
     /**
      * Retorna todas las películas que haya alquilado cierto cliente
@@ -57,5 +56,14 @@ public interface PeliculaDAO {
      */
     public Collection<Pelicula> obtenerPeliculasPorCliente(Cliente cliente)
                                                             throws SQLException;
+    
+    /**
+     * Dado un objeto Pelicula, borra la fila equivalente en la base de datos.
+     * @param pelicula Un objeto de tipo Pelicula que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrarPelicula(Pelicula pelicula) throws SQLException;
     
 }

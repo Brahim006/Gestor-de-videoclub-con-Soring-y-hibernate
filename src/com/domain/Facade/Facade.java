@@ -49,7 +49,17 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearCliente(Cliente cliente) throws SQLException;
+    public void crearCliente(Cliente cliente) throws SQLException;
+    
+    /**
+     * Dado un objeto Cliente, borra la fila equivalente en la base de datos.
+     * @param cliente Un objeto de tipo Cliente que tenga las 
+     * características deseadas.
+     * @return Un booleano informando el éxito de la operación.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrar(Cliente cliente) throws SQLException;
     
     /**
      * Retorna una Promoción según su ID
@@ -78,11 +88,19 @@ public interface Facade {
      * Crea una promoción y la añade a la 
      * @param promocion Un objeto de tipo Promocion que tenga las 
      * características deseadas.
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearPromocion(Promocion promocion) throws SQLException;
+    public void crearPromocion(Promocion promocion) throws SQLException;
+    
+    /**
+     * Dado un objeto Promocion, borra la fila equivalente en la base de datos.
+     * @param promocion Un objeto de tipo Promocion que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrar(Promocion promocion) throws SQLException;
     
     /**
      * Retorna un genero según su id.
@@ -110,11 +128,19 @@ public interface Facade {
      * Inserta un género nuevo en la base de datos.
      * @param genero Un objeto Genero con las características a insertar en
      * la base de datos.
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearGenero(Genero genero) throws SQLException;
+    public void crearGenero(Genero genero) throws SQLException;
+    
+    /**
+     * Dado un objeto Genero, borra la fila equivalente en la base de datos.
+     * @param genero Un objeto de tipo Genero que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrar(Genero genero) throws SQLException;
     
     /**
      * Retorna una película desde la base de datos según su ID.
@@ -145,7 +171,17 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearPelicula(Pelicula pelicula) throws SQLException;
+    public void crearPelicula(Pelicula pelicula) throws SQLException;
+    
+    /**
+     * Dado un objeto Pelicula, borra la fila equivalente en la base de datos.
+     * @param pelicula Un objeto de tipo Pelicula que tenga las 
+     * características deseadas.
+     * @return Un booleano informando el éxito de la operación.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrar(Pelicula pelicula) throws SQLException;
     
     /**
      * Retorna los alquileres efectuados por un cliente específico
@@ -230,12 +266,20 @@ public interface Facade {
      * aplicada al efectuarse el alquiler ó null en el caso de que no se
      * apliquen descuentos
      * @param dias La cantidad de días sobre las que se realiza el alquiler
-     * @return Un booleano informando el éxito de la operación
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearAlquiler(AlquilerPK pk, Promocion promocion, int dias)
+    public void crearAlquiler(AlquilerPK pk, Promocion promocion, int dias)
                                                             throws SQLException;
+    
+    /**
+     * Dado un objeto Alquiler, borra la fila equivalente en la base de datos.
+     * @param alquiler Un objeto de tipo Alquiler que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrar(Alquiler alquiler) throws SQLException;
     
     // Métodos que usan una relación many-to-many
     

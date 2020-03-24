@@ -42,11 +42,10 @@ public interface ClienteDAO {
     /**
      * Inserta un nuevo cliente en la base de datos.
      * @param cliente un objeto CLiente que tenga las características deseadas
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearCliente(Cliente cliente) throws SQLException;
+    public void crearCliente(Cliente cliente) throws SQLException;
     
     /**
      * Retorna todos los clientes que hayan alquilado cierta película
@@ -72,5 +71,14 @@ public interface ClienteDAO {
      */
     public Collection<Cliente> obtenerClientesPorPromocion(Promocion promocion)
                                                             throws SQLException;
+    
+    /**
+     * Dado un objeto Cliente, borra la fila equivalente en la base de datos.
+     * @param cliente Un objeto de tipo Cliente que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrarCliente(Cliente cliente)throws SQLException;
     
 }

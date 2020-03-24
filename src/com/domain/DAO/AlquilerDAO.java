@@ -103,11 +103,19 @@ public interface AlquilerDAO {
      * aplicada al efectuarse el alquiler ó null en el caso de que no se
      * apliquen descuentos
      * @param dias La cantidad de días sobre las que se realiza el alquiler
-     * @return Un booleano informando el éxito de la operación
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearAlquiler(AlquilerPK pk, Promocion promocion, int dias)
+    public void crearAlquiler(AlquilerPK pk, Promocion promocion, int dias)
                                                             throws SQLException;
+    
+    /**
+     * Dado un objeto Alquiler, borra la fila equivalente en la base de datos.
+     * @param alquiler Un objeto de tipo Alquiler que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrarAlquiler(Alquiler alquiler) throws SQLException;
     
 }

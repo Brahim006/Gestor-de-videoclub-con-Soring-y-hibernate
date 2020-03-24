@@ -55,11 +55,10 @@ public interface PromocionDAO {
      * Crea una promoción y la añade a la 
      * @param promocion Un objeto de tipo Promocion que tenga las 
      * características deseadas.
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public boolean crearPromocion(Promocion promocion) throws SQLException;
+    public void crearPromocion(Promocion promocion) throws SQLException;
     
     /**
      * Retorna todas las promociones de las que es beneficiario un cliente en
@@ -73,5 +72,14 @@ public interface PromocionDAO {
      */
     public Collection<Promocion> obtenerPromocionesPorCliente(Cliente cliente)
                                                             throws SQLException;
+    
+    /**
+     * Dado un objeto Promocion, borra la fila equivalente en la base de datos.
+     * @param promocion Un objeto de tipo Promocion que tenga las 
+     * características deseadas.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public void borrarPromocion(Promocion promocion) throws SQLException;
     
 }
