@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Implementación para Hibernate del DAO para la tabla Cliente en la bd
  */
 package com.domain.hibernate.DAO;
 
@@ -21,7 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 public class ClienteDAOHibernateImple extends HibernateDaoSupport 
                                                         implements ClienteDAO {
@@ -53,7 +51,7 @@ public class ClienteDAOHibernateImple extends HibernateDaoSupport
     
         Session session = getSession();
         
-        String hql = "FROM Cliente c WHERE c.nombre LIKE = ':d%'";
+        String hql = "FROM Cliente c WHERE c.nombre LIKE ':d%'";
         Query q = session.createQuery(hql).setString("d", nombre);
         
         ArrayList<Cliente> ret = new ArrayList<>();
