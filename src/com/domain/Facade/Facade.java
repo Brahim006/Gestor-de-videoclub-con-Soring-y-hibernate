@@ -167,7 +167,6 @@ public interface Facade {
     /**
      * Inserta una película en la base de datos.
      * @param pelicula Objeto Pelicula que representa la fila a ser insertada.
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
@@ -177,7 +176,6 @@ public interface Facade {
      * Dado un objeto Pelicula, borra la fila equivalente en la base de datos.
      * @param pelicula Un objeto de tipo Pelicula que tenga las 
      * características deseadas.
-     * @return Un booleano informando el éxito de la operación.
      * @throws SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
@@ -259,18 +257,11 @@ public interface Facade {
     /**
      * Inserta una fila en la tabla Alquiler con las características indicadas
      * (de ser posible)
-     * @param pk Un objeto AlquilerPK que representa una clave primaria única
-     * compuesta por el idPelicula, idCliente y la fecha en la que se realizó el
-     * alquiler
-     * @param promocion Un objeto Promocion que representa la promoción
-     * aplicada al efectuarse el alquiler ó null en el caso de que no se
-     * apliquen descuentos
-     * @param dias La cantidad de días sobre las que se realiza el alquiler
+     * @param alquiler Objeto Alquiler que representa la fila a ser insertada.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearAlquiler(AlquilerPK pk, Promocion promocion, int dias)
-                                                            throws SQLException;
+    public void crearAlquiler(Alquiler alquiler) throws SQLException;
     
     /**
      * Dado un objeto Alquiler, borra la fila equivalente en la base de datos.
