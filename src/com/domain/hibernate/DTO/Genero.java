@@ -14,11 +14,46 @@ import java.util.ArrayList;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 @Entity
 @Table(name="genero")
 public class Genero {
+    
+    /**
+     * Crea un objeto Genero con todos sus parámetros seteados por defecto.
+     */
+    public Genero(){}
+    
+    /**
+     * Crea un objeto Genero que no está asociado a otras tablas.
+     * @param idGenero ID del género que funge como clave primaria en la base de
+     * datos.
+     * @param descripcion Descripción del género. 
+     */
+    public Genero(int idGenero, String descripcion){
+        
+        this.idGenero = idGenero;
+        this.descripcion = descripcion;
+        
+    }
+    
+    /**
+     * Crea un objeto Genero teniendo encuenta sus asociaciones a otras tablas
+     * en la base de datos.
+     * @param idGenero ID del género que funge como clave primaria en la base de
+     * datos.
+     * @param descripcion Descripción del género. 
+     * @param peliculas Colección de objetos Pelicula que se relacionan con la
+     * fila que representa a este género en la base de datos.
+     */
+    public Genero(int idGenero, String descripcion,
+                                            Collection<Pelicula> peliculas){
+        
+        this(idGenero, descripcion);
+        this.peliculas = peliculas;
+        
+    }
     
     @Id
     @Column(name="id_genero")
@@ -30,6 +65,20 @@ public class Genero {
     @OneToMany
     @JoinColumn(name="id_pelicula")
     private Collection<Pelicula> peliculas = new ArrayList<>();
+    
+    @Override
+    public String toString(){
+        
+        return "ID del género: " + idGenero + ", descripción: " + descripcion;
+        
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.idGenero == ((Genero)obj).getIdGenero();
+    }
+    
+    
     
     //Setters y Getters
 

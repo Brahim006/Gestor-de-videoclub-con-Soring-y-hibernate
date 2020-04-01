@@ -5,6 +5,7 @@
  */
 package com.domain.hibernate.DTO;
 
+import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.Column;
 import java.sql.Date;
@@ -14,7 +15,7 @@ import java.sql.Date;
  * @author User
  */
 @Embeddable
-public class AlquilerPK {
+public class AlquilerPK implements Serializable{
     
     @Column(name="id_pelicula")
     private int idPelicula;
@@ -25,9 +26,19 @@ public class AlquilerPK {
     @Column(name="fecha")
     private Date fecha;
     
-    public AlquilerPK(){} // Constructor para que el objeto sea un Beans
+    /**
+     * Crea un objeto AlquilerPK con todos sus atributos por defecto
+     */
+    public AlquilerPK(){}
     
-    public AlquilerPK(int dPelicula, int idCliente, Date fecha){
+    /**
+     * Crea un objeto AlquilerPK seteando todos sus atributos
+     * @param idPelicula ID de la película que se alquiló.
+     * @param idCliente ID del cliente que alquiló la película.
+     * @param fecha Objeto sql.Date que representa la fecha en la que se realizó
+     * el alquiler.
+     */
+    public AlquilerPK(int idPelicula, int idCliente, Date fecha){
         
         this.idCliente = idCliente;
         this.idPelicula = idPelicula;
@@ -35,6 +46,28 @@ public class AlquilerPK {
         
     }
 
+    @Override
+    public String toString(){
+        
+        return "ID de la película: " + idPelicula + ", ID del cliente: " +
+                idCliente + ", fecha del alquiler: " + fecha.toString();
+        
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+        AlquilerPK pk = (AlquilerPK)obj;
+        
+        return 
+                this.idPelicula == pk.getIdPelicula() &&
+                this.idCliente == pk.getIdCliente() &&
+                this.fecha.equals(pk.fecha);
+        
+    }
+    
+    
+    
     // Setters y Getters
 
     public int getIdPelicula() {

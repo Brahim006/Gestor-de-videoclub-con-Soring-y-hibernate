@@ -16,11 +16,52 @@ import java.util.ArrayList;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 @Entity
 @Table(name="pelicula")
 public class Pelicula {
+    
+    /**
+     * Crea un objeto Pelicula con todos sus valores por defecto.
+     */
+    public Pelicula(){}
+    
+    /**
+     * Crea un objeto Pelicula que no está asociado a otras tablas
+     * @param idPelicula ID de la película que funge como clave primaria en la 
+     * base de datos.
+     * @param titulo Título de la película.
+     * @param copias Cantidad de copias en total.
+     */
+    public Pelicula(int idPelicula, String titulo, int copias){
+        
+        this.idPelicula = idPelicula;
+        this.titulo = titulo;
+        this.copias = copias;
+        
+    }
+    
+    /**
+     * Crea un objeto Pelicula teniendo encuenta sus asociaciones a otras tablas
+     * en la base de datos.
+     * @param idPelicula ID de la película que funge como clave primaria en la 
+     * base de datos.
+     * @param titulo Título de la película.
+     * @param copias Cantidad de copias en total.
+     * @param genero Un objeto género que representa a la fila de la tabla
+     * Genero que provee la clave foránea en la base de datos.
+     * @param clientes Una colección de objetos Cliente cuya tabla en la base de
+     * datos representa una relacion many-to-many a través de la tabla Alquiler.
+     */
+    public Pelicula(int idPelicula, String titulo, int copias, Genero genero, 
+                                                Collection<Cliente> clientes){
+        
+        this(idPelicula, titulo, copias);
+        this.genero = genero;
+        this.clientes = clientes;
+        
+    }
     
     @Id
     @Column(name="id_pelicula")
@@ -43,6 +84,22 @@ public class Pelicula {
         joinColumns = { @JoinColumn(name="id_pelicula")},
         inverseJoinColumns = {@JoinColumn(name="id_cliente")})
     private Collection<Cliente> clientes = new ArrayList<>();
+    
+    @Override
+    public String toString(){
+        
+        return "ID Pelicula: " + idPelicula + ", título: " + titulo +
+                ", género: " + genero.getDescripcion() + 
+                ", cantidad de copias: " + copias;
+        
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.idPelicula == ((Pelicula)obj).getIdPelicula();
+    }
+    
+    
     
     // Setters y Getters
 

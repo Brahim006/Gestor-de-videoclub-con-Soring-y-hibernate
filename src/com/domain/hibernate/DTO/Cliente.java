@@ -15,11 +15,49 @@ import java.util.ArrayList;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 @Entity
 @Table(name="cliente")
 public class Cliente {
+    
+    /**
+     * Crea un objeto Cliente con todos sus parámetros seteados por defecto.
+     */
+    public Cliente(){}
+    
+    /**
+     * Crea un objeto cliente que no está asociado a otras tablas
+     * @param idCliente Número único que identifica al cliente y fonge como
+     * clave primaria en la base de datos.
+     * @param nombre Nombre del cliente, no necesariamente único.
+     */
+    public Cliente(int idCliente, String nombre){
+        
+        this.idCliente = idCliente;
+        this.nombre = nombre;
+        
+    }
+    
+    /**
+     * Crea un objeto Cliente teniendo encuenta sus asociaciones a otras tablas
+     * en la base de datos.
+     * @param idCliente Número único que identifica al cliente y fonge como
+     * clave primaria en la base de datos.
+     * @param nombre Nombre del cliente, no necesariamente único.
+     * @param peliculas Colección de objetos Pelicula que se relacionan en la
+     * base de datos a la tabla Cliente.
+     * @param promociones Colección de objetos Promocion que se relacionan en la
+     * base de datos a la tabla Cliente.
+     */
+    public Cliente(int idCliente, String nombre, Collection<Pelicula> peliculas,
+            Collection<Promocion> promociones){
+        
+        this(idCliente, nombre);
+        this.peliculas = peliculas;
+        this.promociones = promociones;
+        
+    }
     
     @Id
     @Column(name="id_cliente")
@@ -43,6 +81,20 @@ public class Cliente {
             joinColumns = { @JoinColumn(name="id_cliente") },
             inverseJoinColumns = { @JoinColumn(name="id_promocion") })
     private Collection<Promocion> promociones = new ArrayList<>();
+    
+    @Override
+    public String toString(){
+        
+        return "ID cliente: " + idCliente + ", nombre: " + nombre;
+        
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.idCliente == ((Cliente)obj).getIdCliente();
+    }
+    
+    
     
     // Setters y Getters
 

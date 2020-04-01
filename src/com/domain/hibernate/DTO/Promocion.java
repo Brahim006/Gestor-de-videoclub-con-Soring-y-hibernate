@@ -15,11 +15,51 @@ import java.util.ArrayList;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 @Entity
 @Table(name="promocion")
 public class Promocion {
+    
+    /**
+     * Crea un objeto Promocion con todos sus atributos por defecto.
+     */
+    public Promocion(){}
+    
+    /**
+     * Crea un objeto Promocion teniendo encuenta sus asociaciones a otras 
+     * tablas en la base de datos.
+     * @param idPromocion ID de la promoción que funge como clave primaria en la 
+     * base de datos.
+     * @param descuento Cantidad neta que se descuenta del precio del alquiler.
+     * @param descripcion Descripción del descuento.
+     */
+    public Promocion(int idPromocion, int descuento, String descripcion){
+        
+        this.idPromocion = idPromocion;
+        this.descuento = descuento;
+        this.descripcion = descripcion;
+        
+    }
+    
+    /**
+     * Crea un objeto Promocion teniendo encuenta sus asociaciones a otras 
+     * tablas en la base de datos.
+     * @param idPromocion ID de la promoción que funge como clave primaria en la 
+     * base de datos.
+     * @param descuento descripcion Cantidad neta que se descuenta del precio 
+     * del alquiler.
+     * @param descripcion Descripción del descuento.
+     * @param clientes Una colección de objetos Cliente cuya tabla en la base de
+     * datos representa una relacion many-to-many a través de la tabla Alquiler.
+     */
+    public Promocion(int idPromocion, int descuento, String descripcion, 
+                                                Collection<Cliente> clientes){
+        
+        this(idPromocion, descuento, descripcion);
+        this.clientes = clientes;
+        
+    }
     
     @Id
     @Column(name="id_promocion")
@@ -39,6 +79,19 @@ public class Promocion {
             inverseJoinColumns = { @JoinColumn(name="id_cliente") })
     private Collection<Cliente> clientes =  new ArrayList<>();
 
+    @Override
+    public String toString(){
+        
+        return "ID de la promocion: " + idPromocion + ", descripción: " +
+                ", descuento: " + descuento + "$";
+                
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.idPromocion == ((Promocion)obj).getIdPromocion();
+    }
+    
     // Setters y Getters
 
     public int getIdPromocion() {
