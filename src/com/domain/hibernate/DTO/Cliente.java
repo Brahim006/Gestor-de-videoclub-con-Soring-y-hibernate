@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -60,6 +62,7 @@ public class Cliente {
     }
     
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id_cliente")
     private int idCliente;
     

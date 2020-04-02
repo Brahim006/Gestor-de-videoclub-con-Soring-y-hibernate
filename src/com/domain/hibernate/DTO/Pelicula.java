@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -64,6 +66,7 @@ public class Pelicula {
     }
     
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id_pelicula")
     private int idPelicula;
     

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -62,6 +64,7 @@ public class Promocion {
     }
     
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id_promocion")
     private int idPromocion;
     

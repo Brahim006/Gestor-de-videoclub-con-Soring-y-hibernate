@@ -6,6 +6,7 @@ package com.domain.DAO;
 
 import com.domain.hibernate.DTO.Cliente;
 import com.domain.hibernate.DTO.Pelicula;
+import com.domain.hibernate.DTO.Genero;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -55,6 +56,19 @@ public interface PeliculaDAO {
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
     public Collection<Pelicula> obtenerPeliculasPorCliente(Cliente cliente)
+                                                            throws SQLException;
+    
+    /**
+     * Retorna una colección de objetos Pelicula que tienen una asociación
+     * many-to-one con una fila de la tabla Cliente.
+     * @param genero Un objeto de tipo Genero al cual pertenecen las películas
+     * retornadas
+     * @return Una colección conteniendo todas las películas que cumplan el
+     * criterio de búsqueda ó null en caso de que no hayan coincidencias.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Pelicula> obtenerPeliculasPorGenero(Genero genero)
                                                             throws SQLException;
     
     /**
