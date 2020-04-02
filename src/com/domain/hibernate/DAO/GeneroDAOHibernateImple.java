@@ -6,41 +6,44 @@ package com.domain.hibernate.DAO;
 import com.domain.DAO.GeneroDAO;
 import com.domain.hibernate.DTO.Genero;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 // Imports para el uso de los frameworks
+import com.domain.hibernate.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
-import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.JDBCException;
 
 /**
  *
  * @author User
  */
-public class GeneroDAOHibernateImple extends HibernateDaoSupport 
-                                                        implements GeneroDAO {
+public class GeneroDAOHibernateImple implements GeneroDAO {
 
     @Override
     public Genero obtenerGeneroPorId(int id) throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Genero g WHERE g.idGenero = :d";
-        Query q = session.createQuery(hql).setInteger("d", id);
-        
-        Collection<Genero> coll = q.list();
-        
-        Genero ret = null;
-        
-        for(Genero g : coll){
-            ret = new Genero();
-            ret.setIdGenero(g.getIdGenero());
-            ret.setDescripcion(g.getDescripcion());
+        try {
+            // consulta
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Genero g WHERE g.idGenero = ?";
+            Query q = session.createQuery(hql).setInteger(0, id);
+            // Obtengo el único resultado (o null)
+            Genero ret = (Genero)q.uniqueResult();
+            
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        return ret;
         
     } // fin obtenerGeneroPorId
 
@@ -48,35 +51,48 @@ public class GeneroDAOHibernateImple extends HibernateDaoSupport
     public Collection<Genero> obtenerGeneroPorDescripcion(String descripcion) 
                                                         throws SQLException {
     
-        Session session =  getSession();
+        Session session = null;
         
-        String hql = "FROM Genero g WHERE g.descripcion LIKE ':d%'";
-        Query q = session.createQuery(hql).setString("d", descripcion);
-        
-        Collection<Genero> coll = q.list();
-        ArrayList<Genero> ret = new ArrayList<>();
-        
-        for(Genero g : coll){
-            ret.add(g);
+        try {
+            // consulta
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Genero g WHERE g.descripcion LIKE ?";
+            Query q = session.createQuery(hql).setString(0, descripcion + "%");
+
+            Collection<Genero> ret = q.list();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
         
     } // fin obtenerGeneroPorDescripcion
 
     @Override
     public void crearGenero(Genero genero) throws SQLException {
     
-        Session session  = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.save(genero);
-        
+        Session session  = null;
+ 
         try {
+            session = HibernateSessionFactory.getSession();
+            Transaction tr = session.beginTransaction();
+            session.save(genero);
             tr.commit();
-        } catch (HibernateException he) {
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
         
     } // fir crearGenero
@@ -84,15 +100,23 @@ public class GeneroDAOHibernateImple extends HibernateDaoSupport
     @Override
     public void borrarGenero(Genero genero) throws SQLException {
     
-        Session session = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.delete(genero);
+        Session session = null;
         
         try {
+            
+            session = HibernateSessionFactory.getSession();
+        
+            Transaction tr = session.beginTransaction();
+            session.delete(genero);
             tr.commit();
-        } catch (HibernateException he) {
-            throw new SQLException(he.getMessage());
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
         
     } // fin borrarGenero

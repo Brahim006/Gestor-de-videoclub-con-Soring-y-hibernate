@@ -5,6 +5,7 @@ package com.domain.hibernate.DAO;
 
 import com.domain.DAO.PeliculaDAO;
 import com.domain.hibernate.DTO.Cliente;
+import com.domain.hibernate.DTO.Genero;
 import com.domain.hibernate.DTO.Pelicula;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,35 +14,39 @@ import java.util.Collection;
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
-import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.JDBCException;
+import com.domain.hibernate.HibernateSessionFactory;
 
 /**
  *
  * @author Brahim
  */
-public class PeliculaDAOHibernateImple extends HibernateDaoSupport 
-                                                        implements PeliculaDAO {
+public class PeliculaDAOHibernateImple implements PeliculaDAO {
 
     @Override
     public Pelicula obtenerPeliculaPorId(int id) throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Pelicula p WHERE p.idPelicula = :d";
-        Query q = session.createQuery(hql).setInteger("d", id);
+        try {
+            
+            session = HibernateSessionFactory.getSession();
         
-        Collection<Pelicula> coll = q.list();
-        Pelicula ret = null;
-        
-        for(Pelicula p : coll){
-            ret = new Pelicula();
-            ret.setIdPelicula(p.getIdPelicula());
-            ret.setTitulo(p.getTitulo());
-            ret.setCopias(p.getCopias());
+            String hql = "FROM Pelicula p WHERE p.idPelicula = ?";
+            Query q = session.createQuery(hql).setInteger(0, id);
+
+            Pelicula ret = (Pelicula)q.uniqueResult();
+
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        return ret;
         
     } // fin obtenerPeliculaPorId
 
@@ -49,20 +54,28 @@ public class PeliculaDAOHibernateImple extends HibernateDaoSupport
     public Collection<Pelicula> obtenerPeliculaPorTitulo(String titulo) 
                                                         throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Pelicula p WHERE p.titulo LIKE ':d%'";
-        Query q = session.createQuery(hql).setString("d", titulo);
-        
-        Collection<Pelicula> coll = q.list();
-        ArrayList<Pelicula> ret = new ArrayList<>();
-        
-        for(Pelicula p : coll){
-            ret.add(p);
+        try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Pelicula p WHERE p.titulo LIKE ?";
+            Query q = session.createQuery(hql).setString(0, titulo + "%");
+
+            Collection<Pelicula> ret = q.list();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
         
     } // fin obtenerPeliculaPorTitulo
 
@@ -70,33 +83,77 @@ public class PeliculaDAOHibernateImple extends HibernateDaoSupport
     public Collection<Pelicula> obtenerPeliculasPorCliente(Cliente cliente) 
                                                         throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        Cliente c = (Cliente)session.get(Cliente.class, cliente.getIdCliente());
+        try {
+            
+            session = HibernateSessionFactory.getSession();
         
-        ArrayList<Pelicula> ret = new ArrayList<>();
-        
-        for(Pelicula p : c.getPeliculas()){
-            ret.add(p);
+            Cliente c = (Cliente)session
+                                    .get(Cliente.class, cliente.getIdCliente());
+
+            Collection<Pelicula> ret = c.getPeliculas();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
         
     } // fin obtenerPeliculasPorCliente
     
     @Override
-    public void crearPelicula(Pelicula pelicula) throws SQLException {
+    public Collection<Pelicula> obtenerPeliculasPorGenero(Genero genero) 
+                                                        throws SQLException {
     
-        Session session = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.save(pelicula);
+        Session session = null;
         
         try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            Genero g = (Genero)session.get(Genero.class, genero.getIdGenero());
+            
+            Collection<Pelicula> ret = g.getPeliculas();
+            
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
+        }
+    
+    } // fin obtenerPeliculasPorGenero
+    
+    @Override
+    public void crearPelicula(Pelicula pelicula) throws SQLException {
+    
+        Session session = null;
+        
+        try {
+            session = HibernateSessionFactory.getSession();
+        
+            Transaction tr = session.beginTransaction();
+            session.save(pelicula);
             tr.commit();
-        } catch (HibernateException he) {
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
         
     } // fin crearPelicula
@@ -104,15 +161,21 @@ public class PeliculaDAOHibernateImple extends HibernateDaoSupport
     @Override
     public void borrarPelicula(Pelicula pelicula) throws SQLException {
     
-        Session session = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.delete(pelicula);
+        Session session = null;
         
         try {
+            session = HibernateSessionFactory.getSession();
+        
+            Transaction tr = session.beginTransaction();
+            session.delete(pelicula);
             tr.commit();
-        } catch (HibernateException he) {
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
         
     } // fin borrarPelicula

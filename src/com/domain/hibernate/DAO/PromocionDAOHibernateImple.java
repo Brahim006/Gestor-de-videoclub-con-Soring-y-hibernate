@@ -8,41 +8,43 @@ import com.domain.hibernate.DTO.Cliente;
 import com.domain.hibernate.DTO.Promocion;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.ArrayList;
 // Imports para el funcionamiento del framework
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
-import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.JDBCException;
+import com.domain.hibernate.HibernateSessionFactory;
 
 /**
  *
  * @author Brahim
  */
-public class PromocionDAOHibernateImple extends HibernateDaoSupport 
-                                                       implements PromocionDAO {
+public class PromocionDAOHibernateImple implements PromocionDAO {
 
     @Override
     public Promocion obtenerPromocionPorId(int id) throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Promocion p WHERE p.idPromocion = :d";
-        Query q = session.createQuery(hql).setInteger("d", id);
+        try {
+            
+            session = HibernateSessionFactory.getSession();
         
-        Collection<Promocion> coll = q.list();
-        
-        Promocion ret = null;
-        
-        for(Promocion p : coll){
-            ret = new Promocion();
-            ret.setIdPromocion(p.getIdPromocion());
-            ret.setDescuento(p.getDescuento());
-            ret.setDescripcion(p.getDescripcion());
+            String hql = "FROM Promocion p WHERE p.idPromocion = ?";
+            Query q = session.createQuery(hql).setInteger(0, id);
+
+            Promocion ret = (Promocion)q.uniqueResult();
+
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        return ret;
         
     } // fin obtenerPromocionPorId
 
@@ -50,21 +52,28 @@ public class PromocionDAOHibernateImple extends HibernateDaoSupport
     public Collection<Promocion> obtenerPromocionPorMonto(int monto) 
                                                           throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Promocion p WHERE p.descuento = :d";
-        Query q = session.createQuery(hql).setInteger("d", monto);
+        try {
+            
+            session = HibernateSessionFactory.getSession();
         
-        Collection<Promocion> coll = q.list();
-        
-        ArrayList<Promocion> ret = new ArrayList<>();
-        
-        for(Promocion p : coll){
-            ret.add(p);
+            String hql = "FROM Promocion p WHERE p.descuento = ?";
+            Query q = session.createQuery(hql).setInteger(0, monto);
+
+            Collection<Promocion> ret = q.list();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
         
     } // fin obtenerPromocionPorMonto
 
@@ -72,24 +81,32 @@ public class PromocionDAOHibernateImple extends HibernateDaoSupport
     public Collection<Promocion> obtenerPromocionPorRango(int min, int max) 
                                                           throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Promocion p WHERE p.descuento >= :d " + 
-                "AND p.descuento <= :e";
+        try {
+            
+            session = HibernateSessionFactory.getSession();
         
-        Query q = session.createQuery(hql);
-        q.setInteger("d", min);
-        q.setInteger("e", max);
-        
-        Collection<Promocion> coll = q.list();
-        ArrayList<Promocion> ret =  new ArrayList<>();
-        
-        for(Promocion p : coll){
-            ret.add(p);
+            String hql = "FROM Promocion p WHERE p.descuento >= ? " + 
+                    "AND p.descuento <= ?";
+
+            Query q = session.createQuery(hql);
+            q.setInteger(0, min);
+            q.setInteger(1, max);
+
+            Collection<Promocion> ret = q.list();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
     
     } // fin obtenerPromocionPorRango
 
@@ -97,33 +114,49 @@ public class PromocionDAOHibernateImple extends HibernateDaoSupport
     public Collection<Promocion> obtenerPromocionesPorCliente(Cliente cliente) 
                                                           throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        Cliente c = (Cliente)session.get(Cliente.class, cliente.getIdCliente());
+        try {
+            
+            session = HibernateSessionFactory.getSession();
         
-        ArrayList<Promocion> ret = new ArrayList<>();
-        
-        for(Promocion p : c.getPromociones()){
-            ret.add(p);
+            Cliente c = (Cliente)session.get(Cliente.class, cliente
+                                                               .getIdCliente());
+
+            Collection<Promocion> ret = c.getPromociones();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
     
     } // fin obtenerPromocionesPorCliente
     
     @Override
     public void crearPromocion(Promocion promocion) throws SQLException {
     
-        Session session = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.save(promocion);
+        Session session = null;
 
         try {
+            session = HibernateSessionFactory.getSession();
+        
+            Transaction tr = session.beginTransaction();
+            session.save(promocion);
             tr.commit();
-        } catch (HibernateException he) {
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
         
     } // fin crearPromocion
@@ -131,15 +164,21 @@ public class PromocionDAOHibernateImple extends HibernateDaoSupport
     @Override
     public void borrarPromocion(Promocion promocion) throws SQLException {
     
-        Session session = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.delete(promocion);
+        Session session = null;
         
         try {
+            session = HibernateSessionFactory.getSession();
+        
+            Transaction tr = session.beginTransaction();
+            session.delete(promocion);
             tr.commit();
-        } catch (HibernateException he) {
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
         
     } // fin borrarPromocion

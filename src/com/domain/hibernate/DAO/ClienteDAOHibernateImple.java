@@ -9,39 +9,44 @@ import com.domain.hibernate.DTO.Pelicula;
 import com.domain.hibernate.DTO.Promocion;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.ArrayList;
 // Imports para el uso de los frameworks
+import com.domain.hibernate.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
-import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.hibernate.JDBCException;
 
 /**
  *
  * @author Brahim
  */
-public class ClienteDAOHibernateImple extends HibernateDaoSupport 
-                                                        implements ClienteDAO {
+public class ClienteDAOHibernateImple implements ClienteDAO {
 
+    
     @Override
     public Cliente obtenerClientePorId(int id) throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Cliente c WHERE c.idCliente = :d";
-        Query q = session.createQuery(hql).setInteger("d", id);
+        try{
+            // consulta
+            session = HibernateSessionFactory.getSession();
         
-        Collection<Cliente> coll = q.list();
-        Cliente ret = null;
-        
-        for(Cliente c:coll){ // Sólo puede haber uno ó ningún resultado
-            ret = new Cliente();
-            ret.setIdCliente(c.getIdCliente());
-            ret.setNombre(c.getNombre());
+            String hql = "FROM Cliente c WHERE c.idCliente = ?";
+            Query q = session.createQuery(hql).setInteger(0, id);
+            // Obtengo el único resultado (o null)
+            Cliente ret = (Cliente)q.uniqueResult();
+
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        return ret;
         
     } // fin obtenerClientePorID
 
@@ -49,23 +54,27 @@ public class ClienteDAOHibernateImple extends HibernateDaoSupport
     public Collection<Cliente> obtenerClientePorNombre(String nombre) 
                                                         throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        String hql = "FROM Cliente c WHERE c.nombre LIKE ':d%'";
-        Query q = session.createQuery(hql).setString("d", nombre);
+        try{ // consulta
+            session = HibernateSessionFactory.getSession();
         
-        ArrayList<Cliente> ret = new ArrayList<>();
-        Collection<Cliente> coll = q.list();
-        
-        for(Cliente c:coll){
-            Cliente aux = new Cliente();
-            aux.setIdCliente(c.getIdCliente());
-            aux.setNombre(c.getNombre());
-            ret.add(aux);
+            String hql = "FROM Cliente c WHERE c.nombre LIKE ?";
+            Query q = session.createQuery(hql).setString(0, nombre + "%");
+
+            Collection<Cliente> ret = q.list();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
         
     } // fin ObtenerClientePorNombre
 
@@ -73,56 +82,77 @@ public class ClienteDAOHibernateImple extends HibernateDaoSupport
     public Collection<Cliente> obtenerClientesPorPelicula(Pelicula pelicula) 
                                                         throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
         
-        // Busco la película
-        Pelicula p = (Pelicula)session.get(Pelicula.class, 
-                                           pelicula.getIdPelicula());
-        // Obtengo la colección de clientes asociados a esa película
-        ArrayList<Cliente> ret = new ArrayList<>();
-        
-        for(Cliente c:p.getClientes()){
-            ret.add(c);
+        try{
+            // consulta
+            session = HibernateSessionFactory.getSession();
+            
+            Pelicula p = (Pelicula)session.get(Pelicula.class, 
+                                               pelicula.getIdPelicula());
+            Collection<Cliente> ret =  p.getClientes();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de recursos
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
     
     } // fin obtenerClientesPorPelicula
 
     @Override
     public Collection<Cliente> obtenerClientesPorPromocion(Promocion promocion) 
                                                         throws SQLException {
-    
-        Session session = getSession();
+ 
+        Session session = null;
         
-        Promocion p = (Promocion)session.get(Promocion.class, 
-                                             promocion.getIdPromocion());
-        
-        ArrayList<Cliente> ret = new ArrayList<>();
-        
-        for(Cliente c : p.getClientes()){
-            ret.add(c);
+        try {
+            // consulta
+            session = HibernateSessionFactory.getSession();
+            
+            Promocion p = (Promocion)session.get(Promocion.class, 
+                                                 promocion.getIdPromocion());
+
+            Collection<Cliente> ret = p.getClientes();
+
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de recursos
+            if(session != null) session.close();
         }
-        
-        if(ret.isEmpty()) return null;
-        else return ret;
         
     } // fin obtenerClientesPorPromocion
     
     @Override
     public void crearCliente(Cliente cliente) throws SQLException {
     
-        Session session = getSession();
+        Session session = null;
+
+        try { 
+            session = HibernateSessionFactory.getSession();
         
-        Transaction tr = session.beginTransaction();
-        session.save(cliente);
-        
-        try { // Commitea la transacción
+            Transaction tr = session.beginTransaction();
+            session.save(cliente);
             tr.commit();
-        } 
-        catch (HibernateException he) { //Convierte la excepción en SQLException
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally {
+            if(session != null) session.close();
         }
         
     } // fin crearCliente
@@ -130,15 +160,21 @@ public class ClienteDAOHibernateImple extends HibernateDaoSupport
     @Override
     public void borrarCliente(Cliente cliente) throws SQLException {
         
-        Session session = getSession();
-        
-        Transaction tr = session.beginTransaction();
-        session.delete(cliente);
+        Session session = null;
         
         try { // Commitea la transacción
+            session = HibernateSessionFactory.getSession();
+        
+            Transaction tr = session.beginTransaction();
+            session.delete(cliente);
             tr.commit();
-        } catch (HibernateException he){//Convierte la excepción en SQLException
-            throw new SQLException(he.getMessage());
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally {
+            if(session != null) session.close();
         }
         
     } // fin borrarCliente
