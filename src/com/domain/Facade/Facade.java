@@ -45,7 +45,6 @@ public interface Facade {
     /**
      * Inserta un nuevo cliente en la base de datos.
      * @param cliente un objeto CLiente que tenga las características deseadas
-     * @return Un booleano informando el éxito de la operación.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
@@ -55,7 +54,6 @@ public interface Facade {
      * Dado un objeto Cliente, borra la fila equivalente en la base de datos.
      * @param cliente Un objeto de tipo Cliente que tenga las 
      * características deseadas.
-     * @return Un booleano informando el éxito de la operación.
      * @throws SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
@@ -252,7 +250,8 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Alquiler obtenerAlquiler(AlquilerPK pk) throws SQLException;
+    public Collection<Alquiler> obtenerAlquiler(AlquilerPK pk) 
+                                                            throws SQLException;
     
     /**
      * Inserta una fila en la tabla Alquiler con las características indicadas
