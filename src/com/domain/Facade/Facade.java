@@ -43,12 +43,12 @@ public interface Facade {
                                                             throws SQLException;
     
     /**
-     * Inserta un nuevo cliente en la base de datos.
+     * Inserta un nuevo cliente en la base de datos ó actualiza uno ya existente
      * @param cliente un objeto CLiente que tenga las características deseadas
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearCliente(Cliente cliente) throws SQLException;
+    public void crearOActualizarCliente(Cliente cliente) throws SQLException;
     
     /**
      * Dado un objeto Cliente, borra la fila equivalente en la base de datos.
@@ -89,7 +89,8 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearPromocion(Promocion promocion) throws SQLException;
+    public void crearOActualizarPromocion(Promocion promocion) 
+                                                            throws SQLException;
     
     /**
      * Dado un objeto Promocion, borra la fila equivalente en la base de datos.
@@ -129,7 +130,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearGenero(Genero genero) throws SQLException;
+    public void crearOActualizarGenero(Genero genero) throws SQLException;
     
     /**
      * Dado un objeto Genero, borra la fila equivalente en la base de datos.
@@ -168,7 +169,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearPelicula(Pelicula pelicula) throws SQLException;
+    public void crearOActualizarPelicula(Pelicula pelicula) throws SQLException;
     
     /**
      * Dado un objeto Pelicula, borra la fila equivalente en la base de datos.
@@ -260,7 +261,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearAlquiler(Alquiler alquiler) throws SQLException;
+    public void crearOActualizarAlquiler(Alquiler alquiler) throws SQLException;
     
     /**
      * Dado un objeto Alquiler, borra la fila equivalente en la base de datos.

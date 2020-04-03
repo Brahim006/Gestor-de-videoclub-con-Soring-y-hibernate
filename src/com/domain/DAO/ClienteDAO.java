@@ -40,12 +40,12 @@ public interface ClienteDAO {
                                                             throws SQLException;
     
     /**
-     * Inserta un nuevo cliente en la base de datos.
+     * Inserta un nuevo cliente en la base de datos ó actualiza uno ya existente
      * @param cliente un objeto CLiente que tenga las características deseadas
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearCliente(Cliente cliente) throws SQLException;
+    public void crearOActualizarCliente(Cliente cliente) throws SQLException;
     
     /**
      * Retorna todos los clientes que hayan alquilado cierta película

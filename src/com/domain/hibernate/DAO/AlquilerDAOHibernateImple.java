@@ -204,14 +204,14 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorClavePrimaria
 
     @Override
-    public void crearAlquiler(Alquiler alquiler) throws SQLException {
+    public void crearOActualizarAlquiler(Alquiler alquiler) throws SQLException{
     
         Session session = null;
         
         try {
             session = HibernateSessionFactory.getSession();
             Transaction tr = session.beginTransaction();
-            session.save(alquiler);
+            session.saveOrUpdate(alquiler);
             tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();

@@ -44,7 +44,7 @@ public interface PeliculaDAO {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearPelicula(Pelicula pelicula) throws SQLException;
+    public void crearOActualizarPelicula(Pelicula pelicula) throws SQLException;
     
     /**
      * Retorna todas las películas que haya alquilado cierto cliente

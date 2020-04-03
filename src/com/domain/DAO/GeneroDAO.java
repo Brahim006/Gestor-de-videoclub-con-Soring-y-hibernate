@@ -37,13 +37,13 @@ public interface GeneroDAO {
                                                             throws SQLException;
     
     /**
-     * Inserta un género nuevo en la base de datos.
+     * Inserta un género nuevo en la base de datos ó modifica uno ya existente.
      * @param genero Un objeto Genero con las características a insertar en
      * la base de datos.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearGenero(Genero genero) throws SQLException;
+    public void crearOActualizarGenero(Genero genero) throws SQLException;
     
     /**
      * Dado un objeto Genero, borra la fila equivalente en la base de datos.

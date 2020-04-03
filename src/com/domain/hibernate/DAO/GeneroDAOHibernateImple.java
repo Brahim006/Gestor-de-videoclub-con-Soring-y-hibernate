@@ -77,14 +77,14 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
     } // fin obtenerGeneroPorDescripcion
 
     @Override
-    public void crearGenero(Genero genero) throws SQLException {
+    public void crearOActualizarGenero(Genero genero) throws SQLException {
     
         Session session  = null;
  
         try {
             session = HibernateSessionFactory.getSession();
             Transaction tr = session.beginTransaction();
-            session.save(genero);
+            session.saveOrUpdate(genero);
             tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();

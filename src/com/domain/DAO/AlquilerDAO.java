@@ -100,7 +100,7 @@ public interface AlquilerDAO {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearAlquiler(Alquiler alquiler) throws SQLException;
+    public void crearOActualizarAlquiler(Alquiler alquiler) throws SQLException;
     
     /**
      * Dado un objeto Alquiler, borra la fila equivalente en la base de datos.

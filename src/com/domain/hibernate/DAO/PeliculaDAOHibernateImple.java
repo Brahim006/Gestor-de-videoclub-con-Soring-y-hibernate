@@ -8,7 +8,6 @@ import com.domain.hibernate.DTO.Cliente;
 import com.domain.hibernate.DTO.Genero;
 import com.domain.hibernate.DTO.Pelicula;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 // Imports para el uso de los frameworks
 import org.hibernate.Session;
@@ -137,7 +136,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin obtenerPeliculasPorGenero
     
     @Override
-    public void crearPelicula(Pelicula pelicula) throws SQLException {
+    public void crearOActualizarPelicula(Pelicula pelicula) throws SQLException{
     
         Session session = null;
         
@@ -145,7 +144,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
             session = HibernateSessionFactory.getSession();
         
             Transaction tr = session.beginTransaction();
-            session.save(pelicula);
+            session.saveOrUpdate(pelicula);
             tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();

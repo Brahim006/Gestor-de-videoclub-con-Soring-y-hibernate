@@ -140,7 +140,8 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin obtenerPromocionesPorCliente
     
     @Override
-    public void crearPromocion(Promocion promocion) throws SQLException {
+    public void crearOActualizarPromocion(Promocion promocion) 
+                                                          throws SQLException {
     
         Session session = null;
 
@@ -148,7 +149,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
             session = HibernateSessionFactory.getSession();
         
             Transaction tr = session.beginTransaction();
-            session.save(promocion);
+            session.saveOrUpdate(promocion);
             tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();

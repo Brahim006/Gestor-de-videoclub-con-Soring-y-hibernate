@@ -58,7 +58,8 @@ public interface PromocionDAO {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public void crearPromocion(Promocion promocion) throws SQLException;
+    public void crearOActualizarPromocion(Promocion promocion) 
+                                                            throws SQLException;
     
     /**
      * Retorna todas las promociones de las que es beneficiario un cliente en

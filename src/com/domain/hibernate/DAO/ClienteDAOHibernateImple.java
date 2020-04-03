@@ -136,7 +136,7 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin obtenerClientesPorPromocion
     
     @Override
-    public void crearCliente(Cliente cliente) throws SQLException {
+    public void crearOActualizarCliente(Cliente cliente) throws SQLException {
     
         Session session = null;
 
@@ -144,7 +144,7 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
             session = HibernateSessionFactory.getSession();
         
             Transaction tr = session.beginTransaction();
-            session.save(cliente);
+            session.saveOrUpdate(cliente);
             tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();

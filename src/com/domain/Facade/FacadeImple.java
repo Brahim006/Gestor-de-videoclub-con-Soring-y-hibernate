@@ -63,8 +63,8 @@ public class FacadeImple implements Facade {
     }
 
     @Override
-    public void crearCliente(Cliente cliente) throws SQLException {
-        clienteDAO.crearCliente(cliente);
+    public void crearOActualizarCliente(Cliente cliente) throws SQLException {
+        clienteDAO.crearOActualizarCliente(cliente);
     }
 
     @Override
@@ -94,8 +94,9 @@ public class FacadeImple implements Facade {
     }
     
     @Override
-    public void crearPromocion(Promocion promocion) throws SQLException {
-        promocionDAO.crearPromocion(promocion);
+    public void crearOActualizarPromocion(Promocion promocion) 
+                                                        throws SQLException {
+        promocionDAO.crearOActualizarPromocion(promocion);
     }
 
     @Override
@@ -119,8 +120,8 @@ public class FacadeImple implements Facade {
     }
 
     @Override
-    public void crearGenero(Genero genero) throws SQLException {
-        generoDAO.crearGenero(genero);
+    public void crearOActualizarGenero(Genero genero) throws SQLException {
+        generoDAO.crearOActualizarGenero(genero);
     }
 
     @Override
@@ -150,8 +151,8 @@ public class FacadeImple implements Facade {
     }
 
     @Override
-    public void crearPelicula(Pelicula pelicula) throws SQLException {
-        peliculaDAO.crearPelicula(pelicula);
+    public void crearOActualizarPelicula(Pelicula pelicula) throws SQLException{
+        peliculaDAO.crearOActualizarPelicula(pelicula);
     }
 
     @Override
@@ -199,8 +200,8 @@ public class FacadeImple implements Facade {
     }
 
     @Override
-    public void crearAlquiler(Alquiler alquiler) throws SQLException {
-        alquilerDAO.crearAlquiler(alquiler);
+    public void crearOActualizarAlquiler(Alquiler alquiler) throws SQLException{
+        alquilerDAO.crearOActualizarAlquiler(alquiler);
     }
 
     @Override
