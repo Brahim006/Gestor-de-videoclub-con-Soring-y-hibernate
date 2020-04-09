@@ -18,9 +18,10 @@ public class Ejecutable {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(new NimbusLookAndFeel());
-            Gui gui = new Gui();
         } catch (UnsupportedLookAndFeelException ulafe) {
             
+        } finally {
+            Gui gui = new Gui();
         }
     }
     

@@ -36,10 +36,8 @@ public class FacadeImple implements Facade {
     }
 
     @Override
-    public Collection<Cliente> obtenerCliente(int id) throws SQLException {
-        ArrayList<Cliente> ret = new ArrayList<>();
-        ret.add(clienteDAO.obtenerClientePorId(id));
-        return ret;
+    public Cliente obtenerCliente(int id) throws SQLException {
+        return (Cliente)clienteDAO.obtenerClientePorId(id);
     }
 
     // Métodos de acceso a la tabla Cliente
@@ -75,10 +73,8 @@ public class FacadeImple implements Facade {
     // Métodos de acceso a la tabla Promocion
     
     @Override
-    public Collection<Promocion> obtenerPromocion(int id) throws SQLException {
-        ArrayList<Promocion> ret = new ArrayList<>();
-        ret.add(promocionDAO.obtenerPromocionPorId(id));
-        return ret;
+    public Promocion obtenerPromocion(int id) throws SQLException {
+        return (Promocion)promocionDAO.obtenerPromocionPorId(id);
     }
 
     @Override
@@ -107,10 +103,8 @@ public class FacadeImple implements Facade {
     // Métodos de acceso a la tabla Genero
     
     @Override
-    public Collection<Genero> obtenerGenero(int id) throws SQLException {
-        ArrayList<Genero> ret = new ArrayList<>();
-        ret.add(generoDAO.obtenerGeneroPorId(id));
-        return ret;
+    public Genero obtenerGenero(int id) throws SQLException {
+        return (Genero)generoDAO.obtenerGeneroPorId(id);
     }
 
     @Override
@@ -132,10 +126,8 @@ public class FacadeImple implements Facade {
     // Métodos de acceso a la tabla Pelicula
     
     @Override
-    public Collection<Pelicula> obtenerPelicula(int id) throws SQLException {
-        ArrayList<Pelicula> ret = new ArrayList<>();
-        ret.add(peliculaDAO.obtenerPeliculaPorId(id));
-        return ret;
+    public Pelicula obtenerPelicula(int id) throws SQLException {
+        return (Pelicula)peliculaDAO.obtenerPeliculaPorId(id);
     }
 
     @Override
@@ -192,11 +184,9 @@ public class FacadeImple implements Facade {
     }
 
     @Override
-    public Collection<Alquiler> obtenerAlquiler(AlquilerPK pk) 
+    public Alquiler obtenerAlquiler(AlquilerPK pk) 
                                                         throws SQLException {
-        ArrayList<Alquiler> ret = new ArrayList<>();
-        ret.add(alquilerDAO.obtenerAlquilerPorClavePrimaria(pk));
-        return ret;
+        return (Alquiler)alquilerDAO.obtenerAlquilerPorClavePrimaria(pk);
     }
 
     @Override

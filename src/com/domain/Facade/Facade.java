@@ -27,7 +27,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Cliente> obtenerCliente(int id) throws SQLException;
+    public Cliente obtenerCliente(int id) throws SQLException;
     
     /**
      * Retorna uno ó más clientes cuyos nombres sean iguales ó coincidan en sus
@@ -67,7 +67,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Promocion> obtenerPromocion(int id) throws SQLException;
+    public Promocion obtenerPromocion(int id) throws SQLException;
     
     /**
      * Retorna todas las promociones que hagan un descuento que se encuentre en
@@ -109,7 +109,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Genero> obtenerGenero(int id) throws SQLException;
+    public Genero obtenerGenero(int id) throws SQLException;
     
     /**
      * Retorna una colección de géneros por su descripción ó las primeras letras
@@ -149,7 +149,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Pelicula> obtenerPelicula(int id) throws SQLException;
+    public Pelicula obtenerPelicula(int id) throws SQLException;
     
     /**
      * Retorna una película desde la base de datos según las primeras letras de
@@ -251,8 +251,7 @@ public interface Facade {
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
-    public Collection<Alquiler> obtenerAlquiler(AlquilerPK pk) 
-                                                            throws SQLException;
+    public Alquiler obtenerAlquiler(AlquilerPK pk) throws SQLException;
     
     /**
      * Inserta una fila en la tabla Alquiler con las características indicadas
