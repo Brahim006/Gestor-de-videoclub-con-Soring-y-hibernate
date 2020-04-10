@@ -17,6 +17,15 @@ import java.util.Collection;
 public interface PeliculaDAO {
     
     /**
+     * Retorna todas las películas registradas en la base de datos.
+     * @return Una colección de objetos Pelicula que representa a todas las 
+     * entradas de la tabla de películas
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Pelicula> obtenerTodasLasPeliculas() throws SQLException;
+    
+    /**
      * Retorna una película desde la base de datos según su ID.
      * @param id ID único de la película
      * @return Un objeto Pelicula que cumple con los criterios de búsqueda ó

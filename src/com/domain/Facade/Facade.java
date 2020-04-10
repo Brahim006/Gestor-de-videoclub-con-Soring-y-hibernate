@@ -20,9 +20,18 @@ import java.sql.Date;
 public interface Facade {
     
     /**
+     * Retorna todos los clientes
+     * @return Una coleccion de objetos Cliente con todas las entradas de la
+     * base de datos.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Cliente> obtenerCliente() throws SQLException;
+    
+    /**
      * Retorna un cliente según su ID
      * @param id ID que identifica al cliente.
-     * @return Una volección de objetos Cliente según el ID especificado o null 
+     * @return Una colección de objetos Cliente según el ID especificado o null 
      * en caso de que no haya coincidencias.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
@@ -58,6 +67,15 @@ public interface Facade {
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
     public void borrar(Cliente cliente) throws SQLException;
+    
+    /**
+     * Retorna todas las promociones.
+     * @return Una coleccion de objetos Promocion con todas las entradas de la
+     * base de datos.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Promocion> obtenerPromocion() throws SQLException;
     
     /**
      * Retorna una Promoción según su ID
@@ -102,6 +120,15 @@ public interface Facade {
     public void borrar(Promocion promocion) throws SQLException;
     
     /**
+     * Retorna todos los géneros.
+     * @return Una coleccion de objetos Genero con todas las entradas de la
+     * base de datos.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Genero> obtenerGenero() throws SQLException;
+    
+    /**
      * Retorna un genero según su id.
      * @param id ID único del genero buscado.
      * @return Una colección de objetos Genero según el criterio de búsqueda ó 
@@ -142,6 +169,15 @@ public interface Facade {
     public void borrar(Genero genero) throws SQLException;
     
     /**
+     * Retorna todas las películas.
+     * @return Una coleccion de objetos Pelicula con todas las entradas de la
+     * base de datos.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Pelicula> obtenerPelicula() throws SQLException;
+    
+    /**
      * Retorna una película desde la base de datos según su ID.
      * @param id ID único de la película
      * @return Una colección de objetos Pelicula que cumple con los criterios de 
@@ -179,6 +215,7 @@ public interface Facade {
      * conectarse a la base de datos ó al realizar consultas/modificaciones.
      */
     public void borrar(Pelicula pelicula) throws SQLException;
+    
     
     /**
      * Retorna los alquileres efectuados por un cliente específico
@@ -240,6 +277,15 @@ public interface Facade {
      */
     public Collection<Alquiler> obtenerAlquiler(Promocion promocion)
                                                             throws SQLException;
+    
+    /**
+     * Retorna todos los alquileres.
+     * @return Una coleccion de objetos Alquiler con todas las entradas de la
+     * base de datos.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Alquiler> obtenerAlquiler() throws SQLException;
     
     /**
      * Retorna un alquiler bajo una clave primaria única

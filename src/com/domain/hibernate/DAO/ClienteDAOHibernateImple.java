@@ -178,5 +178,33 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         }
         
     } // fin borrarCliente
+
+    @Override
+    public Collection<Cliente> obtenerTodosLosClientes() throws SQLException {
+    
+        Session session = null;
+        
+        try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Cliente";
+            Query q = session.createQuery(hql);
+            
+            Collection<Cliente> ret = q.list();
+            
+            if(ret.isEmpty()) return null;
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally {
+            if(session != null) session.close();
+        }
+        
+    } // fin obtenerTodosLosClientes
     
 }

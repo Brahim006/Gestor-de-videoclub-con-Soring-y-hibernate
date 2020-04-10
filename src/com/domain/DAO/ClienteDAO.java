@@ -17,6 +17,15 @@ import java.util.Collection;
 public interface ClienteDAO {
     
     /**
+     * Retorna todos los clientes registrados en la base de datos.
+     * @return Una colección de objetos Cliente representando todas las entradas
+     * de la tabla clientes
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Cliente> obtenerTodosLosClientes() throws SQLException;
+    
+    /**
      * Retorna un cliente según su ID
      * @param id ID que identifica al cliente.
      * @return Un objeto Cliente según el ID especificado o null en caso de

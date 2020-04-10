@@ -120,5 +120,33 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         }
         
     } // fin borrarGenero
+
+    @Override
+    public Collection<Genero> obtenerTodosLosGeneros() throws SQLException {
+    
+        Session session = null;
+        
+        try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Genero";
+            Query q = session.createQuery(hql);
+            
+            Collection<Genero> ret = q.list();
+            
+            if(ret.isEmpty()) return null;
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
+        }
+    
+    } // fin obtenerTodosLosGeneros
     
 }

@@ -15,6 +15,15 @@ import java.util.Collection;
 public interface GeneroDAO {
     
     /**
+     * Retorna todos los géneros registrados en la base de datos.
+     * @return Una colección de objetos Genero representando todas las entradas
+     * de la tabla genero.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Genero> obtenerTodosLosGeneros() throws SQLException;
+    
+    /**
      * Retorna un genero según su id.
      * @param id ID único del genero buscado.
      * @return Un objeto Genero según el criterio de búsqueda ó null en el 

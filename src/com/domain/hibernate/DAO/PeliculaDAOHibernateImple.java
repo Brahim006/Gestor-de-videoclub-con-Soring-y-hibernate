@@ -178,5 +178,33 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         }
         
     } // fin borrarPelicula
+
+    @Override
+    public Collection<Pelicula> obtenerTodasLasPeliculas() throws SQLException {
+    
+        Session session = null;
+        
+        try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Pelicula";
+            Query q = session.createQuery(hql);
+            
+            Collection<Pelicula> ret = q.list();
+            
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
+        }
+        
+    } // fin obtenerTodasLasPeliculas
     
 }

@@ -198,5 +198,30 @@ public class FacadeImple implements Facade {
     public void borrar(Alquiler alquiler) throws SQLException {
         alquilerDAO.borrarAlquiler(alquiler);
     }
+
+    @Override
+    public Collection<Cliente> obtenerCliente() throws SQLException {
+        return clienteDAO.obtenerTodosLosClientes();
+    }
+
+    @Override
+    public Collection<Promocion> obtenerPromocion() throws SQLException {
+        return promocionDAO.obtenerTodasLasPromociones();
+    }
+
+    @Override
+    public Collection<Genero> obtenerGenero() throws SQLException {
+        return generoDAO.obtenerTodosLosGeneros();
+    }
+
+    @Override
+    public Collection<Pelicula> obtenerPelicula() throws SQLException {
+        return peliculaDAO.obtenerTodasLasPeliculas();
+    }
+
+    @Override
+    public Collection<Alquiler> obtenerAlquiler() throws SQLException {
+        return alquilerDAO.obtenerTodosLosAlquileres();
+    }
     
 }

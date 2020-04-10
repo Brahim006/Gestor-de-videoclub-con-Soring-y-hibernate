@@ -183,5 +183,34 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         }
         
     } // fin borrarPromocion
+
+    @Override
+    public Collection<Promocion> obtenerTodasLasPromociones() 
+                                                        throws SQLException {
+    
+        Session session = null;
+        
+        try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Promocion";
+            Query q = session.createQuery(hql);
+            
+            Collection<Promocion> ret = q.list();
+            
+            if(ret.isEmpty()) return null;
+            return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
+        }
+        
+    } // fin obtenerTodasLasPromociones
     
 }

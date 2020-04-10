@@ -20,6 +20,15 @@ import java.util.Collection;
 public interface AlquilerDAO {
     
     /**
+     * Retorna todos los alquileres de la base de datos.
+     * @return Una colección de objetos Alquiler que representan a todas las 
+     * entradas de la tabla alquiler
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Alquiler> obtenerTodosLosAlquileres() throws SQLException;
+    
+    /**
      * Retorna los alquileres efectuados por un cliente específico
      * @param cliente Un objeto Cliente representando al cliente sobre el que
      * se quiere efectuar la consulta

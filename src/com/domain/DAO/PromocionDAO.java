@@ -16,6 +16,16 @@ import java.util.Collection;
 public interface PromocionDAO {
     
     /**
+     * Retorna todas las promociones registradas en la base de datos.
+     * @return Una colección de objetos Promocion que representa todas las
+     * entradas de la tabla de promociones.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Promocion> obtenerTodasLasPromociones() 
+                                                        throws SQLException;
+    
+    /**
      * Retorna una Promoción según su ID
      * @param id ID única de la promoción
      * @return Un objeto Promocion que cumpla con el criterio de búsqueda ó

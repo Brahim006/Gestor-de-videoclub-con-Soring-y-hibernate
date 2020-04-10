@@ -244,5 +244,34 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         }
         
     } // fin borarAlquiler
+
+    @Override
+    public Collection<Alquiler> obtenerTodosLosAlquileres() 
+                                                        throws SQLException {
+    
+        Session session = null;
+
+        try {
+            
+            session = HibernateSessionFactory.getSession();
+            
+            String hql = "FROM Alquiler";
+            Query q = session.createQuery(hql);
+            
+            Collection<Alquiler> ret = q.list();
+            
+            if(ret.isEmpty()) return null;
+            else return ret;
+            
+        } catch (JDBCException je) { // SQLException devuelta al facade
+            throw je.getSQLException();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException();
+        } finally { // liberación de la sesión
+            if(session != null) session.close();
+        }
+        
+    } // fin obtenerTodosLosAlquileres
     
 }
