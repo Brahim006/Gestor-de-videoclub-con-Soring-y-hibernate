@@ -223,5 +223,11 @@ public class FacadeImple implements Facade {
     public Collection<Alquiler> obtenerAlquiler() throws SQLException {
         return alquilerDAO.obtenerTodosLosAlquileres();
     }
+
+    @Override
+    public Collection<Promocion> obtenerPromocion(String descripcion) 
+                                                        throws SQLException {
+        return promocionDAO.obtenerPromocionPorDescripcion(descripcion);
+    }
     
 }

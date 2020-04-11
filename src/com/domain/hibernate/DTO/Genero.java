@@ -72,7 +72,7 @@ public class Genero {
     @Override
     public String toString(){
         
-        return "ID del género: " + idGenero + ", descripción: " + descripcion;
+        return idGenero + "- " + descripcion;
         
     }
 
@@ -80,8 +80,6 @@ public class Genero {
     public boolean equals(Object obj) {
         return this.idGenero == ((Genero)obj).getIdGenero();
     }
-    
-    
     
     //Setters y Getters
 

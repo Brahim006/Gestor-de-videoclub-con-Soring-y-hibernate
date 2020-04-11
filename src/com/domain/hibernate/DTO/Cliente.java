@@ -97,8 +97,6 @@ public class Cliente {
         return this.idCliente == ((Cliente)obj).getIdCliente();
     }
     
-    
-    
     // Setters y Getters
 
     public int getIdCliente() {

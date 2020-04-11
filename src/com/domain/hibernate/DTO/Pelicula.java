@@ -91,9 +91,7 @@ public class Pelicula {
     @Override
     public String toString(){
         
-        return "ID Pelicula: " + idPelicula + ", título: " + titulo +
-                ", género: " + genero.getDescripcion() + 
-                ", cantidad de copias: " + copias;
+        return idPelicula + "- " + titulo;
         
     }
 
@@ -101,8 +99,6 @@ public class Pelicula {
     public boolean equals(Object obj) {
         return this.idPelicula == ((Pelicula)obj).getIdPelicula();
     }
-    
-    
     
     // Setters y Getters
 

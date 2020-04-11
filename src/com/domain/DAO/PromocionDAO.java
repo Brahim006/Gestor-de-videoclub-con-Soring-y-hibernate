@@ -36,6 +36,18 @@ public interface PromocionDAO {
     public Promocion obtenerPromocionPorId(int id) throws SQLException;
     
     /**
+     * Retorna una promoción según su descripción.
+     * @param descripcion Una cadena que represente la descripción de las
+     * promociones buscadas ó sus primeras letras.
+     * @return Un objeto Promocion que cumpla con el criterio de búsqueda ó
+     * null si no hubo coincidencias.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Promocion> 
+         obtenerPromocionPorDescripcion(String descripcion) throws SQLException;
+    
+    /**
      * Retorna todas las promociones que hagan un descuento con el monto
      * especificado.
      * @param monto Monto de descuento sobre el cual se quieren buscar

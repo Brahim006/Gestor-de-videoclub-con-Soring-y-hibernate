@@ -88,6 +88,18 @@ public interface Facade {
     public Promocion obtenerPromocion(int id) throws SQLException;
     
     /**
+     * Retorna una Promoción según su descripción.
+     * @param descripcion Una cadena que represente la descripción de las
+     * promociones buscadas ó sus primeras letras.
+     * @return Una colección de objetos Promocion que cumpla con el criterio de 
+     * búsqueda ó null si no hubo coincidencias.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Promocion> obtenerPromocion(String descripcion) 
+                                                            throws SQLException;
+    
+    /**
      * Retorna todas las promociones que hagan un descuento que se encuentre en
      * el rango especificado.
      * @param min Monto mínimo

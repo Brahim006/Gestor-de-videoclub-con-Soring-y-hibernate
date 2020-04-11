@@ -85,8 +85,7 @@ public class Promocion {
     @Override
     public String toString(){
         
-        return "ID de la promocion: " + idPromocion + ", descripción: " +
-                ", descuento: " + descuento + "$";
+        return idPromocion + "- " + descripcion;
                 
     }
 

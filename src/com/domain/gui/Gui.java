@@ -24,6 +24,9 @@ import com.domain.gui.utils.InputVerifier;
 import com.domain.Facade.Facade;
 import com.domain.Facade.FacadeImple;
 import com.domain.hibernate.DTO.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,6 +36,7 @@ public class Gui extends JFrame{
     
     private Facade facade; // Facade para acceso a datos
     private BotonListener botonListener;
+    private TextFieldListener textfieldListener;
     
     private JTabbedPane pestanias;
     private JTextField tfBusquedaAlquiler, tfDiasAlquiler, tfBusquedaCliente,
@@ -64,8 +68,7 @@ public class Gui extends JFrame{
             "Película", "Fecha", "Días", "Promoción"},
             COLUMNAS_TABLA_CLIENTE[] = {"Cliente", "Películas", "Promociones"},
             COLUMNAS_TABLA_PELICULA[] = {"Título", "Género", 
-                "Cantidad de copias", "Copias alquiladas", 
-                "Clientes que la alquilan"},
+                "Cantidad de copias", "Clientes que la alquilan"},
             COLUMNAS_TABLA_PROMOCION[] = {"Descripcion", "Descuento",
                 "Clientes que la aplican"},
             COLUMNAS_TABLA_GENERO[] = {"Descripción", "Películas"};
@@ -75,6 +78,7 @@ public class Gui extends JFrame{
         
         facade = new FacadeImple();
         botonListener = new BotonListener();
+        textfieldListener = new TextFieldListener();
         
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -120,7 +124,6 @@ public class Gui extends JFrame{
         jcbFiltrosAlquiler.addItem("--Todos--");
         jcbFiltrosAlquiler.addItem("Cliente");
         jcbFiltrosAlquiler.addItem("Película");
-        jcbFiltrosAlquiler.addItem("Fecha");
         jcbFiltrosAlquiler.addItem("Días");
         jcbFiltrosAlquiler.addItem("Promoción");
         jcbFiltrosAlquiler.setCursor(CURSOR_PULSAR);
@@ -144,7 +147,8 @@ public class Gui extends JFrame{
         bCrearAlquiler = new JButton("Insertar");
         bCrearAlquiler.setAlignmentX(CENTER_ALIGNMENT);
         bCrearAlquiler.setCursor(CURSOR_PULSAR);
-        bCrearAlquiler.setToolTipText("Inserta un alquiler en la base de datos");
+        bCrearAlquiler.setToolTipText("Inserta un alquiler en la base de "
+                                                                 + "datos");
         bCrearAlquiler.addActionListener(botonListener);
         pInfo.add(bCrearAlquiler);
         jcbClienteAlquiler = new JComboBox<>();
@@ -220,9 +224,7 @@ public class Gui extends JFrame{
         jcbFiltrosCliente = new JComboBox<>();
         jcbFiltrosCliente.addItem("--Todos--");
         jcbFiltrosCliente.addItem("Cliente");
-        jcbFiltrosCliente.addItem("Películas alquiladas");
         jcbFiltrosCliente.addItem("Película");
-        jcbFiltrosCliente.addItem("Promociones aplicadas");
         jcbFiltrosCliente.addItem("Promoción");
         jcbFiltrosCliente.setCursor(CURSOR_PULSAR);
         busqueda.add(jcbFiltrosCliente);
@@ -316,10 +318,7 @@ public class Gui extends JFrame{
         jcbFiltrosPelicula.addItem("--Todos--");
         jcbFiltrosPelicula.addItem("Titulo");
         jcbFiltrosPelicula.addItem("Genero");
-        jcbFiltrosPelicula.addItem("Cantidad de copias");
-        jcbFiltrosPelicula.addItem("Copias alquiladas");
         jcbFiltrosPelicula.addItem("Cliente");
-        jcbFiltrosPelicula.addItem("Cantidad de clientes");
         jcbFiltrosPelicula.setCursor(CURSOR_PULSAR);
         pBusqueda.add(jcbFiltrosPelicula);
         pCentro.add(pBusqueda);
@@ -341,7 +340,8 @@ public class Gui extends JFrame{
         bCrearPelicula = new JButton("Insertar");
         bCrearPelicula.setAlignmentX(CENTER_ALIGNMENT);
         bCrearPelicula.setCursor(CURSOR_PULSAR);
-        bCrearPelicula.setToolTipText("Inserta una palícula en la base de datos");
+        bCrearPelicula.setToolTipText("Inserta una palícula en la base de "
+                                                                    + "datos");
         bCrearPelicula.addActionListener(botonListener);
         pCrear.add(bCrearPelicula);
         tfTituloPelicula = new JTextField(25);
@@ -411,7 +411,6 @@ public class Gui extends JFrame{
         jcbFiltrosPromocion.addItem("Descripción");
         jcbFiltrosPromocion.addItem("Descuento");
         jcbFiltrosPromocion.addItem("Cliente");
-        jcbFiltrosPromocion.addItem("Cantidad de clientes");
         jcbFiltrosPromocion.setCursor(CURSOR_PULSAR);
         pBusqueda.add(jcbFiltrosPromocion);
         pCentro.add(pBusqueda);
@@ -432,7 +431,8 @@ public class Gui extends JFrame{
         bCrearPromocion= new JButton("Insertar");
         bCrearPromocion.setAlignmentX(CENTER_ALIGNMENT);
         bCrearPromocion.setCursor(CURSOR_PULSAR);
-        bCrearPromocion.setToolTipText("Inserta una promoción en la base de datos");
+        bCrearPromocion.setToolTipText("Inserta una promoción en la base de"
+                                                                  + " datos");
         bCrearPromocion.addActionListener(botonListener);
         pBotones.add(bCrearPromocion);
         bModificarPromocion = new JButton("Modificar");
@@ -496,7 +496,6 @@ public class Gui extends JFrame{
         jcbFiltrosGenero.addItem("--Todos--");
         jcbFiltrosGenero.addItem("Descripción");
         jcbFiltrosGenero.addItem("Película");
-        jcbFiltrosGenero.addItem("Cantidad películas");
         jcbFiltrosGenero.setCursor(CURSOR_PULSAR);
         pBusqueda.add(jcbFiltrosGenero);
         
@@ -570,43 +569,7 @@ public class Gui extends JFrame{
             try { // Aviso de excepciones a través de ventanas de advertencia
                 
                 // pestaña de alquileres
-                if(e.getSource() == bCrearAlquiler){
-
-                    int idPelicula, idCliente, idPromocion, cantidadDias;
-
-                    // Obtengo los ids de los parámetros seleccionados
-                    if(jcbClienteAlquiler.getSelectedIndex() != 0){
-                    idCliente = idParser((String)jcbClienteAlquiler
-                                                           .getSelectedItem());
-                    } else {
-                        throw new NumberFormatException("Cliente no "
-                                                      + "seleccionado");
-                    }
-                    if(jcbPeliculaAlquiler.getSelectedIndex() != 0){
-                        idPelicula = idParser((String)jcbPeliculaAlquiler
-                                                            .getSelectedItem());
-                    } else {
-                    throw new NumberFormatException
-                                                ("Película no seleccionada");
-                    }
-                    if(jcbPromocionAlquiler.getSelectedIndex() != 0){
-                        idPromocion = idParser((String)jcbPromocionAlquiler
-                                                            .getSelectedItem());
-                    } else {
-                        idPromocion = 0;
-                    }
-
-                    String sDias = InputVerifier
-                                    .verificarTexto(tfDiasAlquiler.getText());
-                    cantidadDias = Integer.parseInt(sDias);
-
-                    Date fecha = new Date(System.currentTimeMillis());
-                    Alquiler a = new Alquiler(idPelicula, idCliente, fecha, 
-                                                    cantidadDias, idPromocion);
-                    facade.crearOActualizarAlquiler(a);
-
-
-                } // fin botón Insertar Alquiler
+                if(e.getSource() == bCrearAlquiler) // fin botón Insertar Alquiler
 
                 if(e.getSource() == bBorrarAlquiler || 
                    e.getSource() == bModificarAlquiler){
@@ -761,34 +724,8 @@ public class Gui extends JFrame{
                 if(e.getSource() == bBorrarPromocion ||
                         e.getSource() == bModificarPromocion){
                     
-                    if(jtPromocion.getSelectedRowCount() != 0){
-                        
-                        int[] filas = jtPromocion.getSelectedRows();
-                        int desc = Integer.parseInt
-                                  ((String)jtPromocion.getValueAt(filas[0], 1));
-                        int min = desc, max = desc;
-                        
-                        // Obtengo el mayor y menor monto para solicitar las
-                        // promociones por un rango
-                        for (int i = 0; i < filas.length; i++) {
-                            desc = Integer.parseInt
-                                  ((String)jtPromocion.getValueAt(filas[i], 1));
-                            if(desc > max) max = desc;
-                            else if (desc < min) min = desc;
-                        }
-                        
-                        Collection<Promocion> coll = facade
-                                                    .obtenerPromocion(min, max);
-                        
-                        for(Promocion p : coll){
-                            if(e.getSource() == bBorrarPromocion)
-                                facade.borrar(p);
-                            else
-                                facade.crearOActualizarPromocion(p);
-                        }
-                        
-                    } else
-                        throw new NullPointerException("No se ha seleccionado"
+                    if(jtPromocion.getSelectedRowCount() != 0); 
+                    else throw new NullPointerException("No se ha seleccionado"
                                 + "una promoción");
                     
                 } // fin botón Borrar Promoción y botón Modificar Promoción
@@ -848,5 +785,335 @@ public class Gui extends JFrame{
         } // fin actionPerformed
         
     } // fin BotonListener
+    
+    class TextFieldListener implements KeyListener{
+
+        // vacía las tablas y después las llena con una colección
+        private void llenarTablaAlquiler(Collection<Alquiler> coll)
+                                                        throws SQLException{
+            
+            // Vacío la tabla
+            for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
+                for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
+                {
+                    jtAlquiler.setValueAt("", i, j);
+                }
+            }
+            
+            // Inserto los valores de la colección
+            int i = 0;
+            
+            for(Alquiler a : coll){
+                Cliente c = facade.obtenerCliente(a.getPk().getIdCliente());
+                jtAlquiler.setValueAt(c.toString(), i, 0);
+                Pelicula p = facade.obtenerPelicula(a.getPk().getIdPelicula());
+                jtAlquiler.setValueAt(p, i, 1);
+                jtAlquiler.setValueAt(a.getPk().getFecha().toString(), i, 2);
+                jtAlquiler.setValueAt(a.getDias(), i, 3);
+                Promocion pr = facade.obtenerPromocion(a.getIdPromocion());
+                jtAlquiler.setValueAt(pr.toString(), i, 4);
+                i++;
+            }
+            
+        } // fin llenarTablaAlquiler
+        
+        private void llenarTablaCliente(Collection<Cliente> coll) 
+                                                        throws SQLException{
+            
+            // vacío la tabla
+            for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
+                for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
+                {
+                    jtCliente.setValueAt("", i, j);
+                }
+            }
+            
+            int i = 0;
+            
+            for(Cliente c : coll){
+                jtCliente.setValueAt(c.toString(), i, 0);
+                jtCliente.setValueAt(c.getPeliculas().size(), i, 1);
+                jtCliente.setValueAt(c.getPromociones().size(), i, 2);
+                i++;
+            }
+            
+        } // fin llenarTablaCliente
+        
+        private void llenarTablaPelicula(Collection<Pelicula> coll) 
+                                                        throws SQLException{
+            
+            for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
+                for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
+                {
+                    jtPelicula.setValueAt("", i, j);
+                }
+            }
+            
+            int i = 0;
+            
+            for(Pelicula p: coll){
+                jtPelicula.setValueAt(p.toString(), i, 0);
+                jtPelicula.setValueAt(p.getGenero().toString(), i, 1);
+                jtPelicula.setValueAt(p.getCopias(), i, 2);
+                jtPelicula.setValueAt(facade.obtenerClientes(p).size(), i, 3);
+                i++;
+            }
+            
+        } // fin llenarTablaPelicula
+        
+        private void llenarTablaPromocion(Collection<Promocion> coll) 
+                                                        throws SQLException{
+            
+            // vacío la tabla
+            for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
+                for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
+                {
+                    jtPromocion.setValueAt("", i, j);
+                }
+            }
+            
+            int i = 0;
+            
+            for(Promocion p : coll){
+                jtPromocion.setValueAt(p.toString(), i, 0);
+                jtPromocion.setValueAt(p.getDescuento(), i, 1);
+                jtPromocion.setValueAt(p.getClientes().size(), i, 2);
+            }
+            
+        } // fin llenarTablaPromocion
+        
+        private void llenarTablaGenero(Collection<Genero> coll) 
+                                                            throws SQLException{
+            
+            // vacío la tabla
+            for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
+                for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
+                {
+                    jtGenero.setValueAt("", i, j);
+                }
+            }
+            
+            int i = 0;
+            
+            for(Genero g : coll){
+                jtGenero.setValueAt(g.toString(), i, 0);
+                jtGenero.setValueAt(g.getPeliculas().size(), i, 1);
+            }
+            
+        } // fin llenarTablaGenero
+        
+        @Override
+        public void keyTyped(KeyEvent e) {
+            
+            try {
+                
+                if(e.getSource() == tfBusquedaAlquiler){
+                
+                String texto = InputVerifier
+                                  .verificarTexto(tfBusquedaAlquiler.getText());
+                
+                // Condiciona la búsqueda según los filtros elegidos
+                switch(jcbFiltrosAlquiler.getSelectedIndex()){
+                    
+                    case 0:
+                        llenarTablaAlquiler(facade.obtenerAlquiler());
+                        break;
+                    case 1:
+                        
+                        Collection<Cliente> clientes = facade
+                                                        .obtenerCliente(texto);
+                        Collection<Alquiler> collC = new ArrayList<>();
+                        for(Cliente c : clientes){
+                            collC.addAll(facade.obtenerAlquiler(c));
+                        }
+                        llenarTablaAlquiler(collC);
+                        
+                        break;
+                    case 2:
+                        
+                        Collection<Pelicula> peliculas = facade
+                                                        .obtenerPelicula(texto);
+                        Collection<Alquiler> collP = new ArrayList<>();
+                        
+                        for(Pelicula p : peliculas){
+                            collP.addAll(facade.obtenerAlquiler(p));
+                        }
+                        llenarTablaAlquiler(collP);
+                        
+                        break;
+                    case 3:
+                        int dias = Integer.parseInt(texto);
+                        llenarTablaAlquiler(facade.obtenerAlquiler(dias));
+                        break;
+                    case 4:
+                        
+                        Collection<Promocion> promociones = facade
+                                                       .obtenerPromocion(texto);
+                        Collection<Alquiler> collPro = new ArrayList<>();
+                        
+                        for(Promocion p : promociones){
+                            collPro.addAll(facade.obtenerAlquiler(p));
+                        }
+                        llenarTablaAlquiler(collPro);
+                        
+                        break;
+                    }
+                } // fin TextField Alquiler
+                
+                if(e.getSource() == tfBusquedaCliente){
+                    
+                    String texto = InputVerifier
+                                   .verificarTexto(tfBusquedaCliente.getText());
+                    
+                    switch(jcbFiltrosCliente.getSelectedIndex()){
+                        case 0:
+                            llenarTablaCliente(facade.obtenerCliente());
+                            break;
+                        case 1:
+                            llenarTablaCliente(facade.obtenerCliente(texto));
+                            break;
+                        case 2:
+                            Collection<Cliente> collC = new ArrayList<>();
+                            
+                            for(Pelicula p : facade.obtenerPelicula(texto)){
+                                collC.addAll(p.getClientes());
+                            }
+                            llenarTablaCliente(collC);
+                            break;
+                        case 3:
+                            Collection<Cliente> collP = new ArrayList<>();
+                            
+                            for(Promocion p : facade.obtenerPromocion(texto)){
+                                collP.addAll(p.getClientes());
+                            }
+                            llenarTablaCliente(collP);
+                            break;
+                    }
+                    
+                } // fin Textfield Clientes
+                
+                if(e.getSource() == tfBusquedaPelicula){
+                    
+                    String texto = InputVerifier.verificarTexto
+                                                (tfBusquedaPelicula.getText());
+                    
+                    if(texto.equals("")){
+                        llenarTablaPelicula(facade.obtenerPelicula());
+                        return;
+                    }
+                    
+                    switch(jcbFiltrosPelicula.getSelectedIndex()){
+                        case 0:
+                            llenarTablaPelicula(facade.obtenerPelicula());
+                            break;
+                        case 1:
+                            llenarTablaPelicula(facade.obtenerPelicula(texto));
+                            break;
+                        case 2:
+                            Collection<Pelicula> collG = new ArrayList<>();
+                            for(Genero g : facade.obtenerGenero(texto)){
+                                collG.addAll(g.getPeliculas());
+                            }
+                            llenarTablaPelicula(collG);
+                            break;
+                        case 3:
+                            Collection<Pelicula> collC = new ArrayList<>();
+                            for(Cliente c : facade.obtenerCliente(texto)){
+                                collC.addAll(c.getPeliculas());
+                            }
+                            llenarTablaPelicula(collC);
+                            break;
+                    }
+                    
+                } // fin Textfield Película
+                
+                if(e.getSource() == tfBusquedaPromocion){
+                    
+                    String texto = InputVerifier.verificarTexto
+                                                (tfBusquedaPromocion.getText());
+                    
+                    if(texto.equals("")){
+                        llenarTablaPromocion(facade.obtenerPromocion());
+                        return;
+                    }
+                    
+                    switch(jcbFiltrosPromocion.getSelectedIndex()){
+                        
+                        case 0:
+                            llenarTablaPromocion(facade.obtenerPromocion());
+                            break;
+                        case 1:
+                            llenarTablaPromocion(facade
+                                                    .obtenerPromocion(texto));
+                            break;
+                        case 2:
+                            int monto = Integer.parseInt(texto);
+                            llenarTablaPromocion(facade
+                                               .obtenerPromocion(monto, monto));
+                            break;
+                        case 3:
+                            Collection<Promocion> coll = new ArrayList<>();
+                            
+                            for(Cliente c : facade.obtenerCliente(texto)){
+                                coll.addAll(c.getPromociones());
+                            }
+                            llenarTablaPromocion(coll);
+                            break;
+                        
+                    }
+                    
+                } // fin Textfield Promoción
+                
+                if(e.getSource() == tfBusquedaGenero){
+                    
+                    String texto = InputVerifier.verificarTexto
+                                                   (tfBusquedaGenero.getText());
+                    
+                    if(texto.equals("")){
+                        llenarTablaGenero(facade.obtenerGenero());
+                        return;
+                    }
+                    
+                    switch(jcbFiltrosGenero.getSelectedIndex()){
+                        case 0:
+                            llenarTablaGenero(facade.obtenerGenero());
+                            break;
+                        case 1:
+                            llenarTablaGenero(facade.obtenerGenero(texto));
+                            break;
+                        case 2:
+                            Collection<Genero> coll = new ArrayList<>();
+                            for(Pelicula p : facade.obtenerPelicula(texto)){
+                                coll.add(p.getGenero());
+                            }
+                            llenarTablaGenero(coll);
+                            break;
+                    }
+                    
+                } // fin Textfield Género
+                
+            } catch (SQLException sqle) {
+                JOptionPane.showMessageDialog(null, sqle.getMessage(), 
+                        "Error de datos", JOptionPane.ERROR_MESSAGE);
+            } catch (NullPointerException npe) {
+                JOptionPane.showMessageDialog(null, npe.getMessage(), 
+                        "Error de nulidad", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(null, nfe.getMessage(), 
+                        "Error de formato", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), 
+                        "Error desconocido", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } // fin keyTyped
+
+        @Override
+        public void keyPressed(KeyEvent e) {}
+
+        @Override
+        public void keyReleased(KeyEvent e) {}
+        
+    } // fin TextFieldListener
     
 }
