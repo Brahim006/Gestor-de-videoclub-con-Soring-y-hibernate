@@ -10,7 +10,6 @@ import com.domain.hibernate.DAO.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.ArrayList;
 
 /**
  *
@@ -228,6 +227,12 @@ public class FacadeImple implements Facade {
     public Collection<Promocion> obtenerPromocion(String descripcion) 
                                                         throws SQLException {
         return promocionDAO.obtenerPromocionPorDescripcion(descripcion);
+    }
+
+    @Override
+    public Collection<Pelicula> obtenerPelicula(Genero genero) 
+                                                           throws SQLException {
+        return peliculaDAO.obtenerPeliculasPorGenero(genero);
     }
     
 }

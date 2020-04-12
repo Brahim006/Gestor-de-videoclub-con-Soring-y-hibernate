@@ -26,6 +26,8 @@ import com.domain.Facade.FacadeImple;
 import com.domain.hibernate.DTO.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
@@ -37,6 +39,7 @@ public class Gui extends JFrame{
     private Facade facade; // Facade para acceso a datos
     private BotonListener botonListener;
     private TextFieldListener textfieldListener;
+    private TableListener tableListener;
     
     private JTabbedPane pestanias;
     private JTextField tfBusquedaAlquiler, tfDiasAlquiler, tfBusquedaCliente,
@@ -79,6 +82,7 @@ public class Gui extends JFrame{
         facade = new FacadeImple();
         botonListener = new BotonListener();
         textfieldListener = new TextFieldListener();
+        tableListener = new TableListener();
         
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -99,7 +103,21 @@ public class Gui extends JFrame{
         pestanias.add("Promociones", crearPestaniaPromocion());
         pestanias.add("Géneros", crearPestaniaGenero());
         this.add(pestanias);
-    }
+        
+        try {
+            
+            llenarTablaAlquiler(facade.obtenerAlquiler());
+            llenarTablaCliente(facade.obtenerCliente());
+            llenarTablaPelicula(facade.obtenerPelicula());
+            llenarTablaPromocion(facade.obtenerPromocion());
+            llenarTablaGenero(facade.obtenerGenero());
+            
+        } catch (SQLException sqle) {
+            JOptionPane.showMessageDialog(null, "Problema al consultar la base "
+                    + "de datos", "Error de datos", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    } // fin initComponents
     
     // Crea la pestania destinada a las operaciones de alquiler
     private JPanel crearPestaniaAlquiler(){
@@ -117,6 +135,7 @@ public class Gui extends JFrame{
         tfBusquedaAlquiler.setPreferredSize(DIMENSION_TEXTFIELD);
         tfBusquedaAlquiler.setToolTipText("Las fechas deben respetar el " + 
                                                         "formato dd/mm/aaaa");
+        tfBusquedaAlquiler.addKeyListener(textfieldListener);
         busqueda.add(tfBusquedaAlquiler);
         busqueda.add(new JLabel("Filtro:"));
         
@@ -134,12 +153,12 @@ public class Gui extends JFrame{
                 [COLUMNAS_TABLA_ALQUILER.length],COLUMNAS_TABLA_ALQUILER);
         jtAlquiler = new JTable(tmAlquiler);
         jtAlquiler.setCursor(CURSOR_SELECCIONAR);
+        jtAlquiler.addMouseListener(tableListener);
         JScrollPane scroll = new JScrollPane(jtAlquiler);
         pNorte.add(scroll, BorderLayout.CENTER);
         
         // Panel sur
         JPanel pSur = new JPanel(new FlowLayout());
-        
         
         JPanel pInfo = new JPanel();
         pInfo.setLayout(new BoxLayout(pInfo, BoxLayout.Y_AXIS));
@@ -218,6 +237,7 @@ public class Gui extends JFrame{
         busqueda.add(new JLabel("Buscar:"));
         tfBusquedaCliente =  new JTextField(CARACTERES_TEXTFIELD);
         tfBusquedaCliente.setPreferredSize(DIMENSION_TEXTFIELD);
+        tfBusquedaCliente.addKeyListener(textfieldListener);
         busqueda.add(tfBusquedaCliente);
         busqueda.add(new JLabel("Filtro:"));
         
@@ -231,9 +251,11 @@ public class Gui extends JFrame{
         pNorte.add(busqueda, BorderLayout.NORTH);
         
         TableModel tmCliente = new TableModelNoEditable
-        (new String[30][COLUMNAS_TABLA_CLIENTE.length],COLUMNAS_TABLA_CLIENTE);
+        (new String[CANT_FILAS][COLUMNAS_TABLA_CLIENTE.length]
+                               ,COLUMNAS_TABLA_CLIENTE);
         jtCliente = new JTable(tmCliente);
         jtCliente.setCursor(CURSOR_SELECCIONAR);
+        jtCliente.addMouseListener(tableListener);
         JScrollPane scroll = new JScrollPane(jtCliente);
         pNorte.add(scroll, BorderLayout.CENTER);
         
@@ -312,6 +334,7 @@ public class Gui extends JFrame{
         pBusqueda.add(new JLabel("Buscar:"));
         tfBusquedaPelicula = new JTextField(CARACTERES_TEXTFIELD);
         tfBusquedaPelicula.setPreferredSize(DIMENSION_TEXTFIELD);
+        tfBusquedaPelicula.addKeyListener(textfieldListener);
         pBusqueda.add(tfBusquedaPelicula);
         pBusqueda.add(new JLabel("Filtros:"));
         jcbFiltrosPelicula = new JComboBox<>();
@@ -328,6 +351,7 @@ public class Gui extends JFrame{
         );
         jtPelicula = new JTable(modeloPelicula);
         jtPelicula.setCursor(CURSOR_SELECCIONAR);
+        jtPelicula.addMouseListener(tableListener);
         JScrollPane scroll = new JScrollPane(jtPelicula);
         pCentro.add(scroll);
         
@@ -404,6 +428,7 @@ public class Gui extends JFrame{
         pBusqueda.add(new JLabel("Buscar:"));
         tfBusquedaPromocion = new JTextField(CARACTERES_TEXTFIELD);
         tfBusquedaPromocion.setPreferredSize(DIMENSION_TEXTFIELD);
+        tfBusquedaPromocion.addKeyListener(textfieldListener);
         pBusqueda.add(tfBusquedaPromocion);
         pBusqueda.add(new JLabel("Filtros:"));
         jcbFiltrosPromocion = new JComboBox<>();
@@ -420,6 +445,7 @@ public class Gui extends JFrame{
                             COLUMNAS_TABLA_PROMOCION);
         jtPromocion = new JTable(modeloPromo);
         jtPromocion.setCursor(CURSOR_SELECCIONAR);
+        jtPromocion.addMouseListener(tableListener);
         JScrollPane scroll = new JScrollPane(jtPromocion);
         pCentro.add(scroll);
         
@@ -490,6 +516,7 @@ public class Gui extends JFrame{
         pBusqueda.add(new JLabel("Buscar:"));
         tfBusquedaGenero = new JTextField(CARACTERES_TEXTFIELD);
         tfBusquedaGenero.setPreferredSize(DIMENSION_TEXTFIELD);
+        tfBusquedaGenero.addKeyListener(textfieldListener);
         pBusqueda.add(tfBusquedaGenero);
         pBusqueda.add(new JLabel("Filtros:"));
         jcbFiltrosGenero = new JComboBox<>();
@@ -506,6 +533,7 @@ public class Gui extends JFrame{
                                                            ,CANT_FILAS);
         jtGenero = new JTable(modeloGenero);
         jtGenero.setCursor(CURSOR_SELECCIONAR);
+        jtGenero.addMouseListener(tableListener);
         JScrollPane scroll = new JScrollPane(jtGenero);
         pCentro.add(scroll);
         
@@ -533,12 +561,11 @@ public class Gui extends JFrame{
         bBorrarGenero.addActionListener(botonListener);
         pOeste.add(bBorrarGenero);
         
-        String[] colsPeliculas = {"Título", "Copias"};
+        String[] colsPeliculas = {"Películas pertenecientes"};
         TableModel modeloPeliculas = new TableModelNoEditable(colsPeliculas, 
                                                               CANT_FILAS);
         jtPeliculasGenero = new JTable(modeloPeliculas);
         jtPeliculasGenero.setCursor(CURSOR_SELECCIONAR);
-        jtPeliculasGenero.setToolTipText("Películas pertenecientes");
         JScrollPane scrollPeliculas = new JScrollPane(jtPeliculasGenero);
         scrollPeliculas.setPreferredSize(DIMENSION_BLOQUE);
         pOeste.add(scrollPeliculas);
@@ -552,15 +579,129 @@ public class Gui extends JFrame{
         
     } // fin crearPestaniaGenero
     
+    // Métodos para el llenado de las tablas
+    private void llenarTablaAlquiler(Collection<Alquiler> coll)
+                                                    throws SQLException{
+
+        // Vacío la tabla
+        for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
+            for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
+            {
+                jtAlquiler.setValueAt("", i, j);
+            }
+        }
+
+        // Inserto los valores de la colección
+        int i = 0;
+
+        for(Alquiler a : coll){
+            Cliente c = facade.obtenerCliente(a.getPk().getIdCliente());
+            jtAlquiler.setValueAt(c.toString(), i, 0);
+            Pelicula p = facade.obtenerPelicula(a.getPk().getIdPelicula());
+            jtAlquiler.setValueAt(p, i, 1);
+            jtAlquiler.setValueAt(a.getPk().getFecha().toString(), i, 2);
+            jtAlquiler.setValueAt(a.getDias(), i, 3);
+            Promocion pr = facade.obtenerPromocion(a.getIdPromocion());
+            jtAlquiler.setValueAt(pr.toString(), i, 4);
+            i++;
+        }
+
+    } // fin llenarTablaAlquiler
+
+    private void llenarTablaCliente(Collection<Cliente> coll) 
+                                                    throws SQLException{
+
+        // vacío la tabla
+        for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
+            for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
+            {
+                jtCliente.setValueAt("", i, j);
+            }
+        }
+
+        int i = 0;
+
+        for(Cliente c : coll){
+            jtCliente.setValueAt(c.toString(), i, 0);
+            jtCliente.setValueAt(c.getPeliculas().size(), i, 1);
+            jtCliente.setValueAt(c.getPromociones().size(), i, 2);
+            i++;
+        }
+
+    } // fin llenarTablaCliente
+
+    private void llenarTablaPelicula(Collection<Pelicula> coll) 
+                                                    throws SQLException{
+
+        for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
+            for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
+            {
+                jtPelicula.setValueAt("", i, j);
+            }
+        }
+
+        int i = 0;
+
+        for(Pelicula p: coll){
+            jtPelicula.setValueAt(p.toString(), i, 0);
+            jtPelicula.setValueAt(p.getGenero().toString(), i, 1);
+            jtPelicula.setValueAt(p.getCopias(), i, 2);
+            jtPelicula.setValueAt(facade.obtenerClientes(p).size(), i, 3);
+            i++;
+        }
+
+    } // fin llenarTablaPelicula
+
+    private void llenarTablaPromocion(Collection<Promocion> coll) 
+                                                    throws SQLException{
+
+        // vacío la tabla
+        for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
+            for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
+            {
+                jtPromocion.setValueAt("", i, j);
+            }
+        }
+
+        int i = 0;
+
+        for(Promocion p : coll){
+            jtPromocion.setValueAt(p.toString(), i, 0);
+            jtPromocion.setValueAt(p.getDescuento(), i, 1);
+            jtPromocion.setValueAt(p.getClientes().size(), i, 2);
+        }
+
+    } // fin llenarTablaPromocion
+
+    private void llenarTablaGenero(Collection<Genero> coll) 
+                                                        throws SQLException{
+
+        // vacío la tabla
+        for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
+            for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
+            {
+                jtGenero.setValueAt("", i, j);
+            }
+        }
+
+        int i = 0;
+
+        for(Genero g : coll){
+            jtGenero.setValueAt(g.toString(), i, 0);
+            jtGenero.setValueAt(g.getPeliculas().size(), i, 1);
+        }
+
+    } // fin llenarTablaGenero
+    
+    // Parsea el id de las cadenas obtenidas de los comboBox
+    private int idParser(String s){
+        StringTokenizer st = new StringTokenizer(s, "-");
+        return Integer.parseInt(st.nextToken());
+    }
+    
     // Clases internas para implementar listeners
     
     class BotonListener implements ActionListener{
-        
-        // Parsea el id de las cadenas obtenidas de los comboBox
-        private int idParser(String s){
-            StringTokenizer st = new StringTokenizer(s, "-");
-            return Integer.parseInt(st.nextToken());
-        }
         
         // Listener para 
         @Override
@@ -787,120 +928,6 @@ public class Gui extends JFrame{
     } // fin BotonListener
     
     class TextFieldListener implements KeyListener{
-
-        // vacía las tablas y después las llena con una colección
-        private void llenarTablaAlquiler(Collection<Alquiler> coll)
-                                                        throws SQLException{
-            
-            // Vacío la tabla
-            for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
-                for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
-                {
-                    jtAlquiler.setValueAt("", i, j);
-                }
-            }
-            
-            // Inserto los valores de la colección
-            int i = 0;
-            
-            for(Alquiler a : coll){
-                Cliente c = facade.obtenerCliente(a.getPk().getIdCliente());
-                jtAlquiler.setValueAt(c.toString(), i, 0);
-                Pelicula p = facade.obtenerPelicula(a.getPk().getIdPelicula());
-                jtAlquiler.setValueAt(p, i, 1);
-                jtAlquiler.setValueAt(a.getPk().getFecha().toString(), i, 2);
-                jtAlquiler.setValueAt(a.getDias(), i, 3);
-                Promocion pr = facade.obtenerPromocion(a.getIdPromocion());
-                jtAlquiler.setValueAt(pr.toString(), i, 4);
-                i++;
-            }
-            
-        } // fin llenarTablaAlquiler
-        
-        private void llenarTablaCliente(Collection<Cliente> coll) 
-                                                        throws SQLException{
-            
-            // vacío la tabla
-            for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
-                for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
-                {
-                    jtCliente.setValueAt("", i, j);
-                }
-            }
-            
-            int i = 0;
-            
-            for(Cliente c : coll){
-                jtCliente.setValueAt(c.toString(), i, 0);
-                jtCliente.setValueAt(c.getPeliculas().size(), i, 1);
-                jtCliente.setValueAt(c.getPromociones().size(), i, 2);
-                i++;
-            }
-            
-        } // fin llenarTablaCliente
-        
-        private void llenarTablaPelicula(Collection<Pelicula> coll) 
-                                                        throws SQLException{
-            
-            for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
-                for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
-                {
-                    jtPelicula.setValueAt("", i, j);
-                }
-            }
-            
-            int i = 0;
-            
-            for(Pelicula p: coll){
-                jtPelicula.setValueAt(p.toString(), i, 0);
-                jtPelicula.setValueAt(p.getGenero().toString(), i, 1);
-                jtPelicula.setValueAt(p.getCopias(), i, 2);
-                jtPelicula.setValueAt(facade.obtenerClientes(p).size(), i, 3);
-                i++;
-            }
-            
-        } // fin llenarTablaPelicula
-        
-        private void llenarTablaPromocion(Collection<Promocion> coll) 
-                                                        throws SQLException{
-            
-            // vacío la tabla
-            for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
-                for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
-                {
-                    jtPromocion.setValueAt("", i, j);
-                }
-            }
-            
-            int i = 0;
-            
-            for(Promocion p : coll){
-                jtPromocion.setValueAt(p.toString(), i, 0);
-                jtPromocion.setValueAt(p.getDescuento(), i, 1);
-                jtPromocion.setValueAt(p.getClientes().size(), i, 2);
-            }
-            
-        } // fin llenarTablaPromocion
-        
-        private void llenarTablaGenero(Collection<Genero> coll) 
-                                                            throws SQLException{
-            
-            // vacío la tabla
-            for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
-                for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
-                {
-                    jtGenero.setValueAt("", i, j);
-                }
-            }
-            
-            int i = 0;
-            
-            for(Genero g : coll){
-                jtGenero.setValueAt(g.toString(), i, 0);
-                jtGenero.setValueAt(g.getPeliculas().size(), i, 1);
-            }
-            
-        } // fin llenarTablaGenero
         
         @Override
         public void keyTyped(KeyEvent e) {
@@ -1115,5 +1142,126 @@ public class Gui extends JFrame{
         public void keyReleased(KeyEvent e) {}
         
     } // fin TextFieldListener
+    
+    class TableListener implements MouseListener{
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        
+            try {
+                
+                if(e.getSource() == jtCliente){
+                    
+                    // Obtengo el id de la fila seleccionada
+                    int id = idParser((String)jtCliente
+                                    .getValueAt(jtCliente.getSelectedRow(), 0));
+                    Cliente c = facade.obtenerCliente(id);
+                    Collection<Pelicula> collPe = facade.obtenerPeliculas(c);
+                    Collection<Promocion> collPr = facade.obtenerPromociones(c);
+                    
+                    // vacio las tablas auxiliares
+                    
+                    for (int i = 0; i < jtPeliculasCliente.getRowCount(); i++) {
+                        jtPeliculasCliente.setValueAt("", i, 0);
+                        jtPromocionesCliente.setValueAt("", i, 0);
+                    }
+                    
+                    // lleno las tablas
+                    int i = 0;
+                    for(Pelicula p : collPe){
+                        jtPeliculasCliente.setValueAt(p.toString(), i, 0);
+                        i++;
+                    }
+                    i = 0;
+                    for(Promocion p : collPr){
+                        jtPromocionesCliente.setValueAt(p.toString(), i, 0);
+                        i++;
+                    }
+                    
+                } // fin Tabla Cliente
+                
+                if(e.getSource() == jtPelicula){
+                    
+                    int id = idParser((String)jtPelicula
+                                   .getValueAt(jtPelicula.getSelectedRow(), 0));
+                    Collection<Cliente> coll = facade
+                                   .obtenerClientes(facade.obtenerPelicula(id));
+                    
+                    for (int i = 0; i < jtClientesPelicula.getRowCount(); i++) {
+                        jtClientesPelicula.setValueAt("", i, 0);
+                    }
+                    
+                    int i = 0;
+                    for(Cliente c : coll){
+                        jtClientesPelicula.setValueAt(c.toString(), i, 0);
+                        i++;
+                    }
+                    
+                } // fin Tabla Películas
+                
+                if(e.getSource() == jtPromocion){
+                    
+                    int id = idParser((String)jtPromocion
+                                  .getValueAt(jtPromocion.getSelectedRow(), 0));
+                    
+                    Collection<Cliente> coll = facade
+                                  .obtenerClientes(facade.obtenerPromocion(id));
+                    
+                    for (int i = 0; i < jtClientesPromocion.getRowCount(); i++){
+                        jtClientesPromocion.setValueAt("", i, 0);
+                    }
+                    
+                    int i = 0;
+                    
+                    for(Cliente c : coll){
+                        jtClientesPromocion.setValueAt(c.toString(), i, 0);
+                        i++;
+                    }
+                    
+                } // fin Tabla Promoción
+                
+                if(e.getSource() == jtGenero){
+                    
+                    int id = idParser((String)jtGenero
+                                     .getValueAt(jtGenero.getSelectedRow(), 0));
+                    Collection<Pelicula> coll = facade
+                                    .obtenerPelicula(facade.obtenerGenero(id));
+                    
+                    for (int i = 0; i < jtPeliculasGenero.getRowCount(); i++) {
+                        jtPeliculasGenero.setValueAt("", i, 0);
+                    }
+                    
+                    int i = 0;
+                    
+                    for(Pelicula p : coll){
+                        jtPeliculasGenero.setValueAt(p.toString(), i, 0);
+                        i++;
+                    }
+                    
+                } // fin Tabla Géneros
+                
+            } catch (SQLException sqle) {
+                JOptionPane.showMessageDialog(null, sqle.getMessage(), 
+                        "Error de datos", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), 
+                        "Error desconocido", JOptionPane.ERROR_MESSAGE);
+            }
+        
+        } // fin mouseClicked
+
+        @Override
+        public void mousePressed(MouseEvent e) {}
+
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+
+        @Override
+        public void mouseExited(MouseEvent e) {}
+        
+    } // fin TableListener
     
 }

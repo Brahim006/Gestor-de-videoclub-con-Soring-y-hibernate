@@ -212,6 +212,18 @@ public interface Facade {
                                                             throws SQLException;
     
     /**
+     * Retorna todas las películas pertenecientes a un género específico.
+     * @param genero Un objeto Genero representando al género sobre el cual se
+     * quiere consultar sus películas.
+     * @return Una colección de objetos Pelicula que cumple con los criterios de
+     * búsqueda ó null en caso de que no haya coincidencias.
+     * @throws SQLException Arroja una excepción al tener problemas al
+     * conectarse a la base de datos ó al realizar consultas/modificaciones.
+     */
+    public Collection<Pelicula> obtenerPelicula(Genero genero) 
+                                                            throws SQLException;
+    
+    /**
      * Inserta una película en la base de datos.
      * @param pelicula Objeto Pelicula que representa la fila a ser insertada.
      * @throws java.sql.SQLException Arroja una excepción al tener problemas al
