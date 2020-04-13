@@ -18,17 +18,17 @@ import java.util.StringTokenizer;
 import java.util.Collection;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import com.domain.gui.utils.TableModelNoEditable;
 import com.domain.gui.utils.InputVerifier;
 import com.domain.Facade.Facade;
 import com.domain.Facade.FacadeImple;
 import com.domain.hibernate.DTO.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 /**
  *
@@ -583,27 +583,31 @@ public class Gui extends JFrame{
     private void llenarTablaAlquiler(Collection<Alquiler> coll)
                                                     throws SQLException{
 
-        // Vacío la tabla
-        for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
-            for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
-            {
-                jtAlquiler.setValueAt("", i, j);
+        if(coll != null){
+            
+            // Vacío la tabla
+            for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
+                for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
+                {
+                    jtAlquiler.setValueAt("", i, j);
+                }
             }
-        }
 
-        // Inserto los valores de la colección
-        int i = 0;
+            // Inserto los valores de la colección
+            int i = 0;
 
-        for(Alquiler a : coll){
-            Cliente c = facade.obtenerCliente(a.getPk().getIdCliente());
-            jtAlquiler.setValueAt(c.toString(), i, 0);
-            Pelicula p = facade.obtenerPelicula(a.getPk().getIdPelicula());
-            jtAlquiler.setValueAt(p, i, 1);
-            jtAlquiler.setValueAt(a.getPk().getFecha().toString(), i, 2);
-            jtAlquiler.setValueAt(a.getDias(), i, 3);
-            Promocion pr = facade.obtenerPromocion(a.getIdPromocion());
-            jtAlquiler.setValueAt(pr.toString(), i, 4);
-            i++;
+            for(Alquiler a : coll){
+                Cliente c = facade.obtenerCliente(a.getPk().getIdCliente());
+                jtAlquiler.setValueAt(c.toString(), i, 0);
+                Pelicula p = facade.obtenerPelicula(a.getPk().getIdPelicula());
+                jtAlquiler.setValueAt(p, i, 1);
+                jtAlquiler.setValueAt(a.getPk().getFecha().toString(), i, 2);
+                jtAlquiler.setValueAt(a.getDias(), i, 3);
+                Promocion pr = facade.obtenerPromocion(a.getIdPromocion());
+                jtAlquiler.setValueAt(pr.toString(), i, 4);
+                i++;
+            }
+            
         }
 
     } // fin llenarTablaAlquiler
@@ -611,21 +615,25 @@ public class Gui extends JFrame{
     private void llenarTablaCliente(Collection<Cliente> coll) 
                                                     throws SQLException{
 
-        // vacío la tabla
-        for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
-            for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
-            {
-                jtCliente.setValueAt("", i, j);
+        if(coll != null){
+            
+            // vacío la tabla
+            for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
+                for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
+                {
+                    jtCliente.setValueAt("", i, j);
+                }
             }
-        }
 
-        int i = 0;
+            int i = 0;
 
-        for(Cliente c : coll){
-            jtCliente.setValueAt(c.toString(), i, 0);
-            jtCliente.setValueAt(c.getPeliculas().size(), i, 1);
-            jtCliente.setValueAt(c.getPromociones().size(), i, 2);
-            i++;
+            for(Cliente c : coll){
+                jtCliente.setValueAt(c.toString(), i, 0);
+                jtCliente.setValueAt(c.getPeliculas().size(), i, 1);
+                jtCliente.setValueAt(c.getPromociones().size(), i, 2);
+                i++;
+            }
+            
         }
 
     } // fin llenarTablaCliente
@@ -633,21 +641,25 @@ public class Gui extends JFrame{
     private void llenarTablaPelicula(Collection<Pelicula> coll) 
                                                     throws SQLException{
 
-        for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
-            for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
-            {
-                jtPelicula.setValueAt("", i, j);
+        if(coll != null){
+            
+            for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
+                for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
+                {
+                    jtPelicula.setValueAt("", i, j);
+                }
             }
-        }
 
-        int i = 0;
+            int i = 0;
 
-        for(Pelicula p: coll){
-            jtPelicula.setValueAt(p.toString(), i, 0);
-            jtPelicula.setValueAt(p.getGenero().toString(), i, 1);
-            jtPelicula.setValueAt(p.getCopias(), i, 2);
-            jtPelicula.setValueAt(facade.obtenerClientes(p).size(), i, 3);
-            i++;
+            for(Pelicula p: coll){
+                jtPelicula.setValueAt(p.toString(), i, 0);
+                jtPelicula.setValueAt(p.getGenero().toString(), i, 1);
+                jtPelicula.setValueAt(p.getCopias(), i, 2);
+                jtPelicula.setValueAt(facade.obtenerClientes(p).size(), i, 3);
+                i++;
+            }
+            
         }
 
     } // fin llenarTablaPelicula
@@ -655,20 +667,24 @@ public class Gui extends JFrame{
     private void llenarTablaPromocion(Collection<Promocion> coll) 
                                                     throws SQLException{
 
-        // vacío la tabla
-        for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
-            for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
-            {
-                jtPromocion.setValueAt("", i, j);
+        if(coll != null){
+            
+            // vacío la tabla
+            for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
+                for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
+                {
+                    jtPromocion.setValueAt("", i, j);
+                }
             }
-        }
 
-        int i = 0;
+            int i = 0;
 
-        for(Promocion p : coll){
-            jtPromocion.setValueAt(p.toString(), i, 0);
-            jtPromocion.setValueAt(p.getDescuento(), i, 1);
-            jtPromocion.setValueAt(p.getClientes().size(), i, 2);
+            for(Promocion p : coll){
+                jtPromocion.setValueAt(p.toString(), i, 0);
+                jtPromocion.setValueAt(p.getDescuento(), i, 1);
+                jtPromocion.setValueAt(p.getClientes().size(), i, 2);
+            }
+            
         }
 
     } // fin llenarTablaPromocion
@@ -676,19 +692,23 @@ public class Gui extends JFrame{
     private void llenarTablaGenero(Collection<Genero> coll) 
                                                         throws SQLException{
 
-        // vacío la tabla
-        for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
-            for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
-            {
-                jtGenero.setValueAt("", i, j);
+        if(coll != null){
+            
+            // vacío la tabla
+            for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
+                for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
+                {
+                    jtGenero.setValueAt("", i, j);
+                }
             }
-        }
 
-        int i = 0;
+            int i = 0;
 
-        for(Genero g : coll){
-            jtGenero.setValueAt(g.toString(), i, 0);
-            jtGenero.setValueAt(g.getPeliculas().size(), i, 1);
+            for(Genero g : coll){
+                jtGenero.setValueAt(g.toString(), i, 0);
+                jtGenero.setValueAt(g.getPeliculas().size(), i, 1);
+            }
+            
         }
 
     } // fin llenarTablaGenero
@@ -1168,12 +1188,13 @@ public class Gui extends JFrame{
                     
                     // lleno las tablas
                     int i = 0;
-                    for(Pelicula p : collPe){
+                    
+                    if(collPe != null) for(Pelicula p : collPe){
                         jtPeliculasCliente.setValueAt(p.toString(), i, 0);
                         i++;
                     }
                     i = 0;
-                    for(Promocion p : collPr){
+                    if(collPr != null) for(Promocion p : collPr){
                         jtPromocionesCliente.setValueAt(p.toString(), i, 0);
                         i++;
                     }
@@ -1191,10 +1212,12 @@ public class Gui extends JFrame{
                         jtClientesPelicula.setValueAt("", i, 0);
                     }
                     
-                    int i = 0;
-                    for(Cliente c : coll){
-                        jtClientesPelicula.setValueAt(c.toString(), i, 0);
-                        i++;
+                    if(coll != null){
+                        int i = 0;
+                        for(Cliente c : coll){
+                            jtClientesPelicula.setValueAt(c.toString(), i, 0);
+                            i++;
+                        }
                     }
                     
                 } // fin Tabla Películas
@@ -1211,11 +1234,12 @@ public class Gui extends JFrame{
                         jtClientesPromocion.setValueAt("", i, 0);
                     }
                     
-                    int i = 0;
-                    
-                    for(Cliente c : coll){
-                        jtClientesPromocion.setValueAt(c.toString(), i, 0);
-                        i++;
+                    if(coll != null){
+                        int i = 0;
+                        for(Cliente c : coll){
+                            jtClientesPromocion.setValueAt(c.toString(), i, 0);
+                            i++;
+                        }
                     }
                     
                 } // fin Tabla Promoción
@@ -1231,11 +1255,12 @@ public class Gui extends JFrame{
                         jtPeliculasGenero.setValueAt("", i, 0);
                     }
                     
-                    int i = 0;
-                    
-                    for(Pelicula p : coll){
-                        jtPeliculasGenero.setValueAt(p.toString(), i, 0);
-                        i++;
+                    if(coll != null){
+                        int i = 0;
+                        for(Pelicula p : coll){
+                            jtPeliculasGenero.setValueAt(p.toString(), i, 0);
+                            i++;
+                        }
                     }
                     
                 } // fin Tabla Géneros
