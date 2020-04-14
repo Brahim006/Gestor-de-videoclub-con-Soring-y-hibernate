@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  */
 @Entity
 @Table(name="pelicula")
-public class Pelicula {
+public class Pelicula implements Serializable {
     
     /**
      * Crea un objeto Pelicula con todos sus valores por defecto.
@@ -66,11 +68,10 @@ public class Pelicula {
     }
     
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id_pelicula")
     private int idPelicula;
     
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="id_genero")
     private Genero genero;
     
@@ -81,7 +82,7 @@ public class Pelicula {
     private int copias;
     
     // Join table para encapsular la relación con la tabla cliente
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
         name="alquiler",
         joinColumns = { @JoinColumn(name="id_pelicula")},

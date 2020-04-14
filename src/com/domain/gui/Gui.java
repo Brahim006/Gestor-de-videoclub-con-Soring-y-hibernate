@@ -14,14 +14,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.StringTokenizer;
-import java.util.Collection;
-import java.sql.SQLException;
-import java.sql.Date;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.sql.Date;
+import java.util.StringTokenizer;
+import java.util.Collection;
 import java.util.ArrayList;
 
 import com.domain.gui.utils.TableModelNoEditable;
@@ -104,13 +104,18 @@ public class Gui extends JFrame{
         pestanias.add("Géneros", crearPestaniaGenero());
         this.add(pestanias);
         
-        try {
+        try { // se inicializan todos los recurso con la información de la bd
             
             llenarTablaAlquiler(facade.obtenerAlquiler());
             llenarTablaCliente(facade.obtenerCliente());
             llenarTablaPelicula(facade.obtenerPelicula());
             llenarTablaPromocion(facade.obtenerPromocion());
             llenarTablaGenero(facade.obtenerGenero());
+            
+            llenarComboBox(0);
+            llenarComboBox(1);
+            llenarComboBox(2);
+            llenarComboBox(3);
             
         } catch (SQLException sqle) {
             JOptionPane.showMessageDialog(null, "Problema al consultar la base "
@@ -713,6 +718,53 @@ public class Gui extends JFrame{
 
     } // fin llenarTablaGenero
     
+    /**
+     * LLena los combobox de 
+     * @param cod Código del combobox a actualizar
+     * 0 : Clientes en la pestaña de alquiler
+     * 1 : Películas en la pestaña de alquiler
+     * 2 : Promociones en la pestaña de alquiler
+     * 3 : Géneros en la pestaña película
+     */
+    private void llenarComboBox(int cod) throws SQLException{
+        
+        switch(cod){
+            case 0:
+                jcbClienteAlquiler.removeAllItems();
+                jcbClienteAlquiler.addItem("--Seleccionar cliente");
+                Collection<Cliente> collC = facade.obtenerCliente();
+                if(collC != null) for(Cliente c : collC){
+                    jcbClienteAlquiler.addItem(c.toString());
+                }
+                break;
+            case 1:
+                jcbPeliculaAlquiler.removeAllItems();
+                jcbPeliculaAlquiler.addItem("--Seleccionar película");
+                Collection<Pelicula> collPe = facade.obtenerPelicula();
+                if(collPe != null) for(Pelicula p : collPe){
+                    jcbPeliculaAlquiler.addItem(p.toString());
+                }
+                break;
+            case 2:
+                jcbPromocionAlquiler.removeAllItems();
+                jcbPromocionAlquiler.addItem("--Seleccionar promoción");
+                Collection<Promocion> collPr = facade.obtenerPromocion();
+                if(collPr != null) for(Promocion p : collPr){
+                    jcbPromocionAlquiler.addItem(p.toString());
+                }
+                break;
+            case 3:
+                jcbGeneroPelicula.removeAllItems();
+                jcbGeneroPelicula.addItem("--Seleccione género");
+                Collection<Genero> collG = facade.obtenerGenero();
+                if(collG != null) for(Genero g : facade.obtenerGenero()){
+                    jcbGeneroPelicula.addItem(g.toString());
+                }
+                break;
+        }
+        
+    } // fin llenarComboBoxes
+    
     // Parsea el id de las cadenas obtenidas de los comboBox
     private int idParser(String s){
         StringTokenizer st = new StringTokenizer(s, "-");
@@ -730,15 +782,92 @@ public class Gui extends JFrame{
             try { // Aviso de excepciones a través de ventanas de advertencia
                 
                 // pestaña de alquileres
-                if(e.getSource() == bCrearAlquiler) // fin botón Insertar Alquiler
+                if(e.getSource() == bCrearAlquiler) {
+                    // Arroja una excepción en caso de que se hayan elegido
+                    // casillas no válidas
+                    if(jcbClienteAlquiler.getSelectedIndex() == 0 ||
+                       jcbPeliculaAlquiler.getSelectedIndex() == 0){
+                        throw new NullPointerException("Falta seleccionar "
+                                                        + "parámetros");
+                    }
+                    
+                    // variables para la creación de la nueva fila
+                    int idCliente = idParser((String)jcbClienteAlquiler
+                                                            .getSelectedItem());
+                    int idPelicula = idParser((String)jcbPeliculaAlquiler
+                                                            .getSelectedItem());
+                    int idPromocion = 0, dias;
+                    Date fecha = new Date(System.currentTimeMillis());
+                    
+                    AlquilerPK pk = new AlquilerPK(idPelicula,idCliente,fecha);
+                    
+                    if(jcbPromocionAlquiler.getSelectedIndex() != 0)
+                        idPromocion = idParser((String)jcbPromocionAlquiler
+                                                            .getSelectedItem());
+                    
+                    dias = Integer.parseInt((String)tfDiasAlquiler.getText());
+                    // Actualización de la base de datos
+                    Alquiler alquiler = new Alquiler(pk, dias, idPromocion);
+                    facade.crearOActualizarAlquiler(alquiler);
+                    // Actualización de recursos
+                    tfDiasAlquiler.setText("");
+                    llenarTablaAlquiler(facade.obtenerAlquiler());
+                    
+                }// fin botón Insertar Alquiler
 
-                if(e.getSource() == bBorrarAlquiler || 
-                   e.getSource() == bModificarAlquiler){
+                if(e.getSource() == bModificarAlquiler){
+                    
+                    int row = jtAlquiler.getSelectedRow();
+                    // analiza que todas las condiciones se cumplan para poder
+                    // realizar una modificación
+                    if(row == -1 || jcbClienteAlquiler.getSelectedIndex() == 0
+                       || jcbPeliculaAlquiler.getSelectedIndex() == 0 ||
+                       tfDiasAlquiler.getText().equals("")){
+                        
+                        throw new NullPointerException("");
+                        
+                    }
+                        
+                    // Obtengo la llave primaria
+                    AlquilerPK pk = new AlquilerPK();
+                    
+                    String s = (String)jtAlquiler.getValueAt(row, 0);
+                    pk.setIdCliente(idParser(s));
+                    s = (String)jtAlquiler.getValueAt(row, 1);
+                    pk.setIdPelicula(idParser(s));
+                    s = (String)jtAlquiler.getValueAt(row, 2);
+                    StringTokenizer st = new StringTokenizer(s, "/");
+                    int dia = Integer.parseInt(st.nextToken());
+                    int mes = Integer.parseInt(st.nextToken());
+                    int anio = Integer.parseInt(st.nextToken());
+                    Date fecha = new Date(anio, mes, dia);
+                    pk.setFecha(fecha);
+                    
+                    Alquiler a = facade.obtenerAlquiler(pk);
+                    facade.borrar(a); // se deshace de la anterior
+                    // Relizo las modificaciones
+                    pk = new AlquilerPK();
+                    pk.setIdCliente(idParser((String)jcbClienteAlquiler
+                                                           .getSelectedItem()));
+                    pk.setIdPelicula(idParser((String)jcbPeliculaAlquiler
+                                                           .getSelectedItem()));
+                    pk.setFecha(fecha);
+                    dia = Integer.parseInt(tfDiasAlquiler.getText());
+                    int idPromocion = idParser((String)jcbPromocionAlquiler
+                                                            .getSelectedItem());
+                    a = new Alquiler(pk, dia, idPromocion);
+                    
+                    facade.crearOActualizarAlquiler(a);
+                    
+                } // fin botón Modificar Alquiler
+                
+                if(e.getSource() == bBorrarAlquiler){
 
                     if(jtAlquiler.getSelectedRowCount() != 0){
                         // Recorre las filas de la tabla y va borrandolas de la
                         // base de datos
                         AlquilerPK pk;
+                        Alquiler a;
                         int[] filas = jtAlquiler.getSelectedRows();
 
                         for (int i = 0; i < filas.length; i++) {
@@ -757,16 +886,9 @@ public class Gui extends JFrame{
                             int anio = Integer.parseInt(st.nextToken());
                             pk.setFecha(new Date(anio, mes, dia));
 
-                            Alquiler a = facade.obtenerAlquiler(pk);
+                            a = facade.obtenerAlquiler(pk);
 
-                            // Se discrimina si se debe borrar ó modificar el
-                            // alquiler según el botón pulsado
-
-                            if(e.getSource() == bBorrarAlquiler)
-                                facade.borrar(a);
-                            else{
-                                facade.crearOActualizarAlquiler(a);
-                            }
+                            facade.borrar(a);
                             
                         }
 
@@ -774,7 +896,7 @@ public class Gui extends JFrame{
                                                           "seleccionado");
 
 
-                } // fin botón Borrar Alquiler y botón Modificar Alquiler
+                } // fin botón Borrar Alquiler
             
                 // Pestaña de clientes
             
@@ -788,27 +910,35 @@ public class Gui extends JFrame{
 
                 } // fin botón Crear Cliente
 
-                if(e.getSource() == bBorrarCliente ||
-                        e.getSource() == bModificarCliente){
+                if(e.getSource() == bModificarCliente){
+                    
+                    int fila = jtCliente.getSelectedRow();
+                    
+                    if(fila != -1){
+                        
+                        
+                        
+                    } else {
+                        throw new NullPointerException("");
+                    }
+                    
+                } //fin botón Modficar Cliente
+                
+                if(e.getSource() == bBorrarCliente){
 
                     if(jtCliente.getSelectedRowCount() != 0){
 
-                            int[] filas = jtCliente.getSelectedRows();
+                        int[] filas = jtCliente.getSelectedRows();
 
-                            for (int i = 0; i < filas.length; i++) {
+                        for (int i = 0; i < filas.length; i++) {
 
-                            int id = idParser((String)jtCliente
-                                                    .getValueAt(filas[i], 0));
+                        int id = idParser((String)jtCliente
+                                                .getValueAt(filas[i], 0));
 
-                            Cliente c = facade.obtenerCliente(id);
+                        Cliente c = facade.obtenerCliente(id);
 
-                            // Discrimina si se debe borrar ó actualizar
-
-                            if(e.getSource() == bBorrarCliente)
-                                facade.borrar(c);
-                            else
-                                facade.crearOActualizarCliente(c);  
-                            }
+                        facade.borrar(c);
+                        }
 
                     } else {
                         throw new NullPointerException("Cliente no "

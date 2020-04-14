@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -15,7 +17,7 @@ import javax.persistence.Id;
  */
 @Entity
 @Table(name="alquiler")
-public class Alquiler {
+public class Alquiler implements Serializable {
     
     /**
      * Crea un objeto Alquiler con todos sus atributos por defecto.
@@ -76,8 +78,17 @@ public class Alquiler {
     @Override
     public boolean equals(Object obj) {
         
-        return pk.equals(((Alquiler)obj).pk);
+        return (obj != null) ? pk.equals(((Alquiler)obj).pk) : false ;
         
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.pk);
+        hash = 79 * hash + this.dias;
+        hash = 79 * hash + this.idPromocion;
+        return hash;
     }
     
     // Setters y Getters

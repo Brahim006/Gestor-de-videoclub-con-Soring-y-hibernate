@@ -11,6 +11,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  */
 @Entity
 @Table(name="genero")
-public class Genero {
+public class Genero implements Serializable {
     
     /**
      * Crea un objeto Genero con todos sus parámetros seteados por defecto.
@@ -58,14 +60,13 @@ public class Genero {
     }
     
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="id_genero")
     private int idGenero;
     
     @Column(name="descripcion")
     private String descripcion;
     
-    @OneToMany
+    @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name="id_pelicula")
     private Collection<Pelicula> peliculas = new ArrayList<>();
     

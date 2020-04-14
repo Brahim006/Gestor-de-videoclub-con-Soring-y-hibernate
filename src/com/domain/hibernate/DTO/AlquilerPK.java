@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.Column;
 import java.sql.Date;
+import java.util.Objects;
 
 /**
  *
@@ -65,8 +66,15 @@ public class AlquilerPK implements Serializable{
                 this.fecha.equals(pk.fecha);
         
     }
-    
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 47 * hash + this.idPelicula;
+        hash = 47 * hash + this.idCliente;
+        hash = 47 * hash + Objects.hashCode(this.fecha);
+        return hash;
+    }
     
     // Setters y Getters
 
