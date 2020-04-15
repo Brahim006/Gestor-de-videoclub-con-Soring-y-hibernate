@@ -64,6 +64,7 @@ public class Cliente implements Serializable {
     }
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id_cliente")
     private int idCliente;
     

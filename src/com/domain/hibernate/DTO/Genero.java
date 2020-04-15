@@ -60,6 +60,7 @@ public class Genero implements Serializable {
     }
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id_genero")
     private int idGenero;
     

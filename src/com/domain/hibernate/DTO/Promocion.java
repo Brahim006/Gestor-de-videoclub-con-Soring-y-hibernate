@@ -66,6 +66,7 @@ public class Promocion implements Serializable {
     }
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id_promocion")
     private int idPromocion;
     
