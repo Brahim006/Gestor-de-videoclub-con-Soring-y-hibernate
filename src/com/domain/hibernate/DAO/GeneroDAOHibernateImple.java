@@ -16,7 +16,7 @@ import org.hibernate.JDBCException;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 public class GeneroDAOHibernateImple implements GeneroDAO {
 
@@ -29,8 +29,8 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
             // consulta
             session = HibernateSessionFactory.getSession();
             
-            String hql = "FROM Genero g WHERE g.idGenero = ?";
-            Query q = session.createQuery(hql).setInteger(0, id);
+            String hql = "FROM Genero g WHERE g.idGenero = :id";
+            Query q = session.createQuery(hql).setInteger("id", id);
             // Obtengo el único resultado (o null)
             Genero ret = (Genero)q.uniqueResult();
             
@@ -57,8 +57,9 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
             // consulta
             session = HibernateSessionFactory.getSession();
             
-            String hql = "FROM Genero g WHERE g.descripcion LIKE ?";
-            Query q = session.createQuery(hql).setString(0, descripcion + "%");
+            String hql = "FROM Genero g WHERE g.descripcion LIKE :desc";
+            Query q = session.createQuery(hql)
+                             .setString("desc", descripcion + "%");
 
             Collection<Genero> ret = q.list();
 

@@ -21,7 +21,7 @@ import com.domain.hibernate.HibernateSessionFactory;
 
 /**
  *
- * @author User
+ * @author Brahim
  */
 public class AlquilerDAOHibernateImple implements AlquilerDAO{
 
@@ -35,9 +35,9 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
             
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Alquiler a WHERE a.pk.idCliente = ?";
+            String hql = "FROM Alquiler a WHERE a.pk.idCliente = :id";
             Query q = session.createQuery(hql)
-                                         .setInteger(0, cliente.getIdCliente());
+                             .setInteger("id", cliente.getIdCliente());
 
             Collection<Alquiler> ret = q.list();
     
@@ -64,9 +64,9 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         try {
             
             session = HibernateSessionFactory.getSession();
-            String hql = "FROM Alquiler a WHERE a.pk.idPelicula = ?";
-            Query q = session.createQuery(hql).setInteger(0, 
-                                                      pelicula.getIdPelicula());
+            String hql = "FROM Alquiler a WHERE a.pk.idPelicula = :id";
+            Query q = session.createQuery(hql)
+                             .setInteger("id", pelicula.getIdPelicula());
         
         Collection<Alquiler> ret = q.list();
         
@@ -93,8 +93,8 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         try {
             
             session = HibernateSessionFactory.getSession();
-            String hql = "FROM Alquiler a WHERE a.pk.fecha = ?";
-            Query q = session.createQuery(hql).setDate(0, fecha);
+            String hql = "FROM Alquiler a WHERE a.pk.fecha = :date";
+            Query q = session.createQuery(hql).setDate("date", fecha);
 
             Collection<Alquiler> ret = q.list();
 
@@ -121,8 +121,8 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         try {
             
             session = HibernateSessionFactory.getSession();
-            String hql = "FROM Alquiler a WHERE a.dias = ?";
-            Query q = session.createQuery(hql).setInteger(0, dias);
+            String hql = "FROM Alquiler a WHERE a.dias = :dias";
+            Query q = session.createQuery(hql).setInteger("dias", dias);
 
             Collection<Alquiler> ret = q.list();
 
@@ -149,9 +149,9 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         try {
             
             session = HibernateSessionFactory.getSession();
-            String hql = "FROM Alquiler a WHERE a.idPromocion = ?";
+            String hql = "FROM Alquiler a WHERE a.idPromocion = :id";
             Query q = session.createQuery(hql)
-                                     .setInteger(0, promocion.getIdPromocion());
+                             .setInteger("id", promocion.getIdPromocion());
 
             Collection<Alquiler> ret = q.list();
 
@@ -179,14 +179,14 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
             
             session = HibernateSessionFactory.getSession();
         
-            String sql = "FROM Alquiler a WHERE a.pk.idPelicula = ? " +
-                    "AND a.pk.idCliente = ? " +
-                    "AND a.pk.date = ?";
+            String sql = "FROM Alquiler a WHERE a.pk.idPelicula = :idP " +
+                    "AND a.pk.idCliente = :idC " +
+                    "AND a.pk.date = :fecha";
             Query q = session.createQuery(sql);
             // seteo los valores
-            q.setInteger(0, pk.getIdPelicula());
-            q.setInteger(1, pk.getIdCliente());
-            q.setDate(2, pk.getFecha());
+            q.setInteger("idP", pk.getIdPelicula());
+            q.setInteger("idC", pk.getIdCliente());
+            q.setDate("fecha", pk.getFecha());
 
             Alquiler ret = (Alquiler)q.uniqueResult();
 

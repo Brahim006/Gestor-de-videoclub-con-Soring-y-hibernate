@@ -30,8 +30,8 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
             
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Promocion p WHERE p.idPromocion = ?";
-            Query q = session.createQuery(hql).setInteger(0, id);
+            String hql = "FROM Promocion p WHERE p.idPromocion = :id";
+            Query q = session.createQuery(hql).setInteger("id", id);
 
             Promocion ret = (Promocion)q.uniqueResult();
 
@@ -58,8 +58,8 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
             
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Promocion p WHERE p.descuento = ?";
-            Query q = session.createQuery(hql).setInteger(0, monto);
+            String hql = "FROM Promocion p WHERE p.descuento = :monto";
+            Query q = session.createQuery(hql).setInteger("monto", monto);
 
             Collection<Promocion> ret = q.list();
 
@@ -87,12 +87,12 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
             
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Promocion p WHERE p.descuento >= ? " + 
-                    "AND p.descuento <= ?";
+            String hql = "FROM Promocion p WHERE p.descuento >= :min " + 
+                    "AND p.descuento <= :max";
 
             Query q = session.createQuery(hql);
-            q.setInteger(0, min);
-            q.setInteger(1, max);
+            q.setInteger("min", min);
+            q.setInteger("max", max);
 
             Collection<Promocion> ret = q.list();
 
@@ -223,8 +223,9 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
             
             session = HibernateSessionFactory.getSession();
             
-            String hql = "FROM Promocion p WHERE p.descripcion LIKE ?";
-            Query q = session.createQuery(hql).setString(1, descripcion + "%");
+            String hql = "FROM Promocion p WHERE p.descripcion LIKE :desc";
+            Query q = session.createQuery(hql)
+                             .setString("desc", descripcion + "%");
             
             Collection<Promocion> ret = q.list();
             

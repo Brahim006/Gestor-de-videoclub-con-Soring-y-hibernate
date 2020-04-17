@@ -32,8 +32,8 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
             // consulta
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Cliente c WHERE c.idCliente = ?";
-            Query q = session.createQuery(hql).setInteger(0, id);
+            String hql = "FROM Cliente c WHERE c.idCliente = :id";
+            Query q = session.createQuery(hql).setInteger("id", id);
             // Obtengo el único resultado (o null)
             Cliente ret = (Cliente)q.uniqueResult();
 
@@ -59,8 +59,9 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         try{ // consulta
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Cliente c WHERE c.nombre LIKE ?";
-            Query q = session.createQuery(hql).setString(0, nombre + "%");
+            String hql = "FROM Cliente c WHERE c.nombre LIKE :nombre";
+            Query q = session.createQuery(hql)
+                             .setString("nombre", nombre + "%");
 
             Collection<Cliente> ret = q.list();
 

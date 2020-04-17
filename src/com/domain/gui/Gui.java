@@ -87,7 +87,6 @@ public class Gui extends JFrame{
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         initComponents();
-        this.pack();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
     }
@@ -121,6 +120,8 @@ public class Gui extends JFrame{
             JOptionPane.showMessageDialog(null, "Problema al consultar la base "
                     + "de datos", "Error de datos", JOptionPane.ERROR_MESSAGE);
         }
+        
+        this.pack();
         
     } // fin initComponents
     
@@ -588,15 +589,15 @@ public class Gui extends JFrame{
     private void llenarTablaAlquiler(Collection<Alquiler> coll)
                                                     throws SQLException{
 
-        if(coll != null){
-            
-            // Vacío la tabla
-            for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
-                for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
-                {
-                    jtAlquiler.setValueAt("", i, j);
-                }
+        // Vacío la tabla
+        for (int i = 0; i < jtAlquiler.getModel().getRowCount(); i++) {
+            for (int j = 0; j < jtAlquiler.getModel().getColumnCount(); j++) 
+            {
+                jtAlquiler.setValueAt("", i, j);
             }
+        }
+        
+        if(coll != null){
 
             // Inserto los valores de la colección
             int i = 0;
@@ -620,15 +621,15 @@ public class Gui extends JFrame{
     private void llenarTablaCliente(Collection<Cliente> coll) 
                                                     throws SQLException{
 
-        if(coll != null){
-            
-            // vacío la tabla
-            for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
-                for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
-                {
-                    jtCliente.setValueAt("", i, j);
-                }
+        // vacío la tabla
+        for (int i = 0; i < jtCliente.getModel().getRowCount(); i++) {
+            for (int j = 0; j < jtCliente.getModel().getColumnCount(); j++) 
+            {
+                jtCliente.setValueAt("", i, j);
             }
+        }
+        
+        if(coll != null){
 
             int i = 0;
 
@@ -646,14 +647,14 @@ public class Gui extends JFrame{
     private void llenarTablaPelicula(Collection<Pelicula> coll) 
                                                     throws SQLException{
 
-        if(coll != null){
-            
-            for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
-                for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
-                {
-                    jtPelicula.setValueAt("", i, j);
-                }
+        for (int i = 0; i < jtPelicula.getModel().getRowCount(); i++) {
+            for (int j = 0; j < jtPelicula.getModel().getColumnCount(); j++) 
+            {
+                jtPelicula.setValueAt("", i, j);
             }
+        }
+        
+        if(coll != null){
 
             int i = 0;
 
@@ -661,7 +662,11 @@ public class Gui extends JFrame{
                 jtPelicula.setValueAt(p.toString(), i, 0);
                 jtPelicula.setValueAt(p.getGenero().toString(), i, 1);
                 jtPelicula.setValueAt(p.getCopias(), i, 2);
-                jtPelicula.setValueAt(facade.obtenerClientes(p).size(), i, 3);
+                Collection<Cliente> cli = facade.obtenerClientes(p);
+                if(cli != null)
+                    jtPelicula.setValueAt(cli.size(), i, 3);
+                else
+                    jtPelicula.setValueAt(0, i, 3);
                 i++;
             }
             
@@ -672,15 +677,15 @@ public class Gui extends JFrame{
     private void llenarTablaPromocion(Collection<Promocion> coll) 
                                                     throws SQLException{
 
-        if(coll != null){
-            
-            // vacío la tabla
-            for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
-                for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
-                {
-                    jtPromocion.setValueAt("", i, j);
-                }
+        // vacío la tabla
+        for (int i = 0; i < jtPromocion.getModel().getRowCount(); i++) {
+            for (int j = 0;j < jtPromocion.getModel().getColumnCount(); j++) 
+            {
+                jtPromocion.setValueAt("", i, j);
             }
+        }
+        
+        if(coll != null){
 
             int i = 0;
 
@@ -688,6 +693,7 @@ public class Gui extends JFrame{
                 jtPromocion.setValueAt(p.toString(), i, 0);
                 jtPromocion.setValueAt(p.getDescuento(), i, 1);
                 jtPromocion.setValueAt(p.getClientes().size(), i, 2);
+                i++;
             }
             
         }
@@ -697,21 +703,22 @@ public class Gui extends JFrame{
     private void llenarTablaGenero(Collection<Genero> coll) 
                                                         throws SQLException{
 
-        if(coll != null){
-            
-            // vacío la tabla
-            for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
-                for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
-                {
-                    jtGenero.setValueAt("", i, j);
-                }
+        // vacío la tabla
+        for (int i = 0; i < jtGenero.getModel().getRowCount(); i++) {
+            for (int j = 0;j < jtGenero.getModel().getColumnCount(); j++) 
+            {
+                jtGenero.setValueAt("", i, j);
             }
+        }
+        
+        if(coll != null){
 
             int i = 0;
 
             for(Genero g : coll){
                 jtGenero.setValueAt(g.toString(), i, 0);
                 jtGenero.setValueAt(g.getPeliculas().size(), i, 1);
+                i++;
             }
             
         }
@@ -811,6 +818,10 @@ public class Gui extends JFrame{
                     facade.crearOActualizarAlquiler(alquiler);
                     // Actualización de recursos
                     tfDiasAlquiler.setText("");
+                    jcbClienteAlquiler.setSelectedIndex(0);
+                    jcbPeliculaAlquiler.setSelectedIndex(0);
+                    jcbPromocionAlquiler.setSelectedIndex(0);
+                    jcbFiltrosAlquiler.setSelectedIndex(0);
                     llenarTablaAlquiler(facade.obtenerAlquiler());
                     
                 }// fin botón Insertar Alquiler
@@ -824,7 +835,8 @@ public class Gui extends JFrame{
                        || jcbPeliculaAlquiler.getSelectedIndex() == 0 ||
                        tfDiasAlquiler.getText().equals("")){
                         
-                        throw new NullPointerException("");
+                        throw new NullPointerException("Fla no seleccionada"
+                                + " ó datos inválidos");
                         
                     }
                         
@@ -858,6 +870,13 @@ public class Gui extends JFrame{
                     a = new Alquiler(pk, dia, idPromocion);
                     
                     facade.crearOActualizarAlquiler(a);
+                    // Actualización de recursos visuales
+                    tfDiasAlquiler.setText("");
+                    jcbClienteAlquiler.setSelectedIndex(0);
+                    jcbPeliculaAlquiler.setSelectedIndex(0);
+                    jcbPromocionAlquiler.setSelectedIndex(0);
+                    jcbFiltrosAlquiler.setSelectedIndex(0);
+                    llenarTablaAlquiler(facade.obtenerAlquiler());
                     
                 } // fin botón Modificar Alquiler
                 
@@ -889,9 +908,11 @@ public class Gui extends JFrame{
                             a = facade.obtenerAlquiler(pk);
 
                             facade.borrar(a);
-                            
                         }
-
+                        
+                        jcbFiltrosAlquiler.setSelectedIndex(0);
+                        llenarTablaAlquiler(facade.obtenerAlquiler());
+                        
                     } else throw new NullPointerException("Alquiler no " + 
                                                           "seleccionado");
 
@@ -908,6 +929,12 @@ public class Gui extends JFrame{
                     c.setNombre(nombreCliente);
                     facade.crearOActualizarCliente(c);
 
+                    // Actualización de recursos visuales
+                    tfNombreCliente.setText("");
+                    llenarComboBox(0);
+                    jcbFiltrosCliente.setSelectedIndex(0);
+                    llenarTablaCliente(facade.obtenerCliente());
+                    
                 } // fin botón Crear Cliente
 
                 if(e.getSource() == bModificarCliente){
@@ -916,10 +943,23 @@ public class Gui extends JFrame{
                     
                     if(fila != -1){
                         
+                        int idCliente = idParser((String)jtCliente
+                                                        .getValueAt(fila, 0));
                         
+                        Cliente c = facade.obtenerCliente(idCliente);
+                        c.setNombre(InputVerifier
+                                    .verificarTexto(tfNombreCliente.getText()));
+                        
+                        facade.crearOActualizarCliente(c);
+                        
+                        tfNombreCliente.setText("");
+                        llenarComboBox(0);
+                        jcbFiltrosCliente.setSelectedIndex(0);
+                        llenarTablaCliente(facade.obtenerCliente());
                         
                     } else {
-                        throw new NullPointerException("");
+                        throw new NullPointerException("Cliente no"
+                                + " seleccionado");
                     }
                     
                 } //fin botón Modficar Cliente
@@ -940,6 +980,10 @@ public class Gui extends JFrame{
                         facade.borrar(c);
                         }
 
+                        llenarComboBox(0);
+                        jcbFiltrosCliente.setSelectedIndex(0);
+                        llenarTablaCliente(facade.obtenerCliente());
+                        
                     } else {
                         throw new NullPointerException("Cliente no "
                                                        + "seleccionado");
@@ -959,19 +1003,66 @@ public class Gui extends JFrame{
                        String sCopias = InputVerifier
                                     .verificarTexto(tfCopiasPelicula.getText());
                        p.setCopias(Integer.parseInt(sCopias));
-                       int idGenero = Integer.parseInt((String)jcbGeneroPelicula
+                       int idGenero = idParser((String)jcbGeneroPelicula
                                                             .getSelectedItem());
                        p.setGenero(facade.obtenerGenero(idGenero));
 
                        facade.crearOActualizarPelicula(p);
+                       
+                       tfCopiasPelicula.setText("");
+                       tfTituloPelicula.setText("");
+                       llenarComboBox(1);
+                       jcbGeneroPelicula.setSelectedIndex(0);
+                       jcbFiltrosPelicula.setSelectedIndex(0);
+                       llenarTablaPelicula(facade.obtenerPelicula());
 
                    } else throw new NullPointerException("Género no "
                                                        + "seleccionado");
 
                 } // fin botón Crear Películas
                 
-                if(e.getSource() == bBorrarPelicula ||
-                        e.getSource() == bModificarPelicula){
+                if(e.getSource() == bModificarPelicula){
+                    
+                    int fila = jtPelicula.getSelectedRow();
+                    
+                    if(fila != -1){
+                        
+                        // Obtengo valores válidos
+                        String titulo = InputVerifier
+                                .verificarTexto(tfTituloPelicula.getText());
+                        int copias = Integer
+                                        .parseInt(tfCopiasPelicula.getText());
+                        
+                        int idPelicula = idParser((String)jtPelicula
+                                                    .getValueAt(fila, 0));
+                        
+                        Pelicula p = facade.obtenerPelicula(idPelicula);
+                        
+                        p.setTitulo(titulo);
+                        p.setCopias(copias);
+                        // Cambia el género
+                        Genero g = null;
+                        if(jcbGeneroPelicula.getSelectedIndex() !=0){
+                            int idGenero = idParser
+                                  ((String)jcbGeneroPelicula.getSelectedItem());
+                            g = facade.obtenerGenero(idGenero);
+                        }
+                        p.setGenero(g);
+                        facade.crearOActualizarPelicula(p);
+                        
+                        tfCopiasPelicula.setText("");
+                        tfTituloPelicula.setText("");
+                        llenarComboBox(1);
+                        jcbGeneroPelicula.setSelectedIndex(0);
+                        jcbFiltrosPelicula.setSelectedIndex(0);
+                        llenarTablaPelicula(facade.obtenerPelicula());
+                        
+                    } else throw new NullPointerException("Película no "
+                            + "seleccionada");
+                    
+                } // fin botón Modificar Película
+                
+                if(e.getSource() == bBorrarPelicula){
                     
                     if(jtPelicula.getSelectedRowCount() != 0){
                         
@@ -981,14 +1072,13 @@ public class Gui extends JFrame{
                             
                             int id = idParser((String)jtPelicula
                                                     .getValueAt(filas[i], 0));
-                            
                             Pelicula p = facade.obtenerPelicula(id);
-                            
-                            if(e.getSource() == bBorrarPelicula)
-                                facade.borrar(p);
-                            else facade.crearOActualizarPelicula(p);
-                            
+                            facade.borrar(p);
                         }
+                        
+                        llenarComboBox(1);
+                        jcbFiltrosPelicula.setSelectedIndex(0);
+                        llenarTablaPelicula(facade.obtenerPelicula());
                         
                     } else
                         throw new NullPointerException("No se han seleccionado"
@@ -1010,14 +1100,62 @@ public class Gui extends JFrame{
                     
                     facade.crearOActualizarPromocion(p);
                     
+                    tfDescuentoPromo.setText("");
+                    tfDescripcionPromo.setText("");
+                    llenarComboBox(2);
+                    jcbFiltrosPelicula.setSelectedIndex(0);
+                    llenarTablaPromocion(facade.obtenerPromocion());
+                    
                 } // fin botón Crear Promoción
                 
-                if(e.getSource() == bBorrarPromocion ||
-                        e.getSource() == bModificarPromocion){
+                if(e.getSource() == bModificarPromocion){
                     
-                    if(jtPromocion.getSelectedRowCount() != 0); 
-                    else throw new NullPointerException("No se ha seleccionado"
-                                + "una promoción");
+                    int fila = jtPromocion.getSelectedRow();
+                    
+                    if(fila != -1){
+                        
+                        int idPromocion = idParser((String)jtPromocion
+                                                        .getValueAt(fila, 0));
+                        
+                        String descripcion = InputVerifier
+                                  .verificarTexto(tfDescripcionPromo.getText());
+                        int descuento = Integer.parseInt(tfDescuentoPromo
+                                               .getText());
+                        
+                        Promocion p = facade.obtenerPromocion(idPromocion);
+                        p.setDescripcion(descripcion);
+                        p.setDescuento(descuento);
+                        
+                        facade.crearOActualizarPromocion(p);
+                        llenarComboBox(2);
+                        tfDescuentoPromo.setText("");
+                        tfDescripcionPromo.setText("");
+                        jcbFiltrosPelicula.setSelectedIndex(0);
+                        llenarTablaPromocion(facade.obtenerPromocion());
+                        
+                    } else throw new NullPointerException("No se ha "
+                            + "seleccionado un promoción");
+                    
+                } // fin botón Modificar Promoción
+                
+                if(e.getSource() == bBorrarPromocion){
+                    
+                    if(jtPromocion.getSelectedRowCount() != 0){
+                        
+                        int[] filas = jtPromocion.getSelectedRows();
+                        
+                        for (int i = 0; i < filas.length; i++) {
+                            int id = idParser((String)jtPromocion
+                                                    .getValueAt(filas[i], 0));
+                            facade.borrar(facade.obtenerPromocion(id));
+                        }
+                        
+                        llenarComboBox(2);
+                        jcbFiltrosPelicula.setSelectedIndex(0);
+                        llenarTablaPromocion(facade.obtenerPromocion());
+                        
+                    } else throw new NullPointerException("No se han "
+                            + "seleccionado promociones");
                     
                 } // fin botón Borrar Promoción y botón Modificar Promoción
                 
@@ -1030,10 +1168,40 @@ public class Gui extends JFrame{
                                 .verificarTexto(tfDescripcionGenero.getText()));
                     facade.crearOActualizarGenero(g);
                     
+                    tfDescripcionGenero.setText("");
+                    llenarComboBox(3);
+                    jcbFiltrosGenero.setSelectedIndex(0);
+                    llenarTablaGenero(facade.obtenerGenero());
+                    
                 } // fin botón Crear Género
                 
-                if(e.getSource() == bBorrarGenero ||
-                        e.getSource() == bModificarGenero){
+                if(e.getSource() == bModificarGenero){
+                    
+                    int fila = jtGenero.getSelectedRow();
+                    
+                    if(fila != -1){
+                        
+                        int idGenero = idParser((String)jtGenero
+                                                        .getValueAt(fila, 0));
+                        String descripcion = InputVerifier.verificarTexto
+                                                (tfDescripcionGenero.getText());
+                        
+                        Genero g = facade.obtenerGenero(idGenero);
+                        g.setDescripcion(descripcion);
+                        
+                        facade.crearOActualizarGenero(g);
+                        
+                        tfDescripcionGenero.setText("");
+                        llenarComboBox(3);
+                        jcbFiltrosGenero.setSelectedIndex(0);
+                        llenarTablaGenero(facade.obtenerGenero());
+                        
+                    } else throw new NullPointerException("No se ha "
+                            + "seleccionado un género");
+                    
+                } // fin botón Modificar Género
+                
+                if(e.getSource() == bBorrarGenero){
                     
                     if(jtGenero.getSelectedRowCount() != 0){
                         
@@ -1043,15 +1211,12 @@ public class Gui extends JFrame{
                             
                             int id = idParser
                                     ((String)jtGenero.getValueAt(filas[i], 0));
-                            
-                            Genero g = facade.obtenerGenero(id);
-                            
-                            if(e.getSource() == bBorrarGenero)
-                                facade.borrar(g);
-                            else
-                                facade.crearOActualizarGenero(g);
-                            
+                            facade.borrar(facade.obtenerGenero(id));
                         }
+                        
+                        llenarComboBox(3);
+                        jcbFiltrosGenero.setSelectedIndex(0);
+                        llenarTablaGenero(facade.obtenerGenero());
                         
                     } else
                         throw new NullPointerException("No se ha seleccionado"
@@ -1086,8 +1251,10 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == tfBusquedaAlquiler){
                 
-                String texto = InputVerifier
-                                  .verificarTexto(tfBusquedaAlquiler.getText());
+                String texto = tfBusquedaAlquiler.getText();
+                
+                if(!texto.equals(""))
+                    texto = InputVerifier.verificarTexto(texto);
                 
                 // Condiciona la búsqueda según los filtros elegidos
                 switch(jcbFiltrosAlquiler.getSelectedIndex()){
@@ -1139,8 +1306,10 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == tfBusquedaCliente){
                     
-                    String texto = InputVerifier
-                                   .verificarTexto(tfBusquedaCliente.getText());
+                    String texto = tfBusquedaCliente.getText();
+                    
+                    if(!texto.equals(""))
+                        texto = InputVerifier.verificarTexto(texto);
                     
                     switch(jcbFiltrosCliente.getSelectedIndex()){
                         case 0:
@@ -1171,8 +1340,10 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == tfBusquedaPelicula){
                     
-                    String texto = InputVerifier.verificarTexto
-                                                (tfBusquedaPelicula.getText());
+                    String texto = tfBusquedaPelicula.getText();
+                    
+                    if(!texto.equals(""))
+                        texto = InputVerifier.verificarTexto(texto);
                     
                     if(texto.equals("")){
                         llenarTablaPelicula(facade.obtenerPelicula());
@@ -1206,8 +1377,10 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == tfBusquedaPromocion){
                     
-                    String texto = InputVerifier.verificarTexto
-                                                (tfBusquedaPromocion.getText());
+                    String texto = tfBusquedaPromocion.getText();
+                    
+                    if(!texto.equals(""))
+                        texto = InputVerifier.verificarTexto(texto);
                     
                     if(texto.equals("")){
                         llenarTablaPromocion(facade.obtenerPromocion());
@@ -1243,8 +1416,10 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == tfBusquedaGenero){
                     
-                    String texto = InputVerifier.verificarTexto
-                                                   (tfBusquedaGenero.getText());
+                    String texto = tfBusquedaGenero.getText();
+                    
+                    if(!texto.equals(""))
+                        texto = InputVerifier.verificarTexto(texto);
                     
                     if(texto.equals("")){
                         llenarTablaGenero(facade.obtenerGenero());
@@ -1273,8 +1448,10 @@ public class Gui extends JFrame{
                 JOptionPane.showMessageDialog(null, sqle.getMessage(), 
                         "Error de datos", JOptionPane.ERROR_MESSAGE);
             } catch (NullPointerException npe) {
-                JOptionPane.showMessageDialog(null, npe.getMessage(), 
-                        "Error de nulidad", JOptionPane.ERROR_MESSAGE);
+                /* se ignora el texto vacío ya que una cadena vaciá retorna
+                 * todos los elementos de una fila cuando se realizan búsquedas
+                 * por nombre en la base de datos.
+                 */
             } catch (NumberFormatException nfe) {
                 JOptionPane.showMessageDialog(null, nfe.getMessage(), 
                         "Error de formato", JOptionPane.ERROR_MESSAGE);
@@ -1302,9 +1479,14 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == jtCliente){
                     
+                    String fila = (String)jtCliente
+                                    .getValueAt(jtCliente.getSelectedRow(), 0);
+                    
+                    // Contempla is la fila seleccionada está vacía
+                    if(fila.equals("")) return;
+                    
                     // Obtengo el id de la fila seleccionada
-                    int id = idParser((String)jtCliente
-                                    .getValueAt(jtCliente.getSelectedRow(), 0));
+                    int id = idParser(fila);
                     Cliente c = facade.obtenerCliente(id);
                     Collection<Pelicula> collPe = facade.obtenerPeliculas(c);
                     Collection<Promocion> collPr = facade.obtenerPromociones(c);
@@ -1333,8 +1515,14 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == jtPelicula){
                     
-                    int id = idParser((String)jtPelicula
-                                   .getValueAt(jtPelicula.getSelectedRow(), 0));
+                    String fila = (String)jtPelicula
+                                   .getValueAt(jtPelicula.getSelectedRow(), 0);
+                    
+                    // Contempla is la fila seleccionada está vacía
+                    if(fila.equals("")) return;
+                    
+                    // Llena las tablas auxiliares
+                    int id = idParser(fila);
                     Collection<Cliente> coll = facade
                                    .obtenerClientes(facade.obtenerPelicula(id));
                     
@@ -1354,8 +1542,14 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == jtPromocion){
                     
-                    int id = idParser((String)jtPromocion
-                                  .getValueAt(jtPromocion.getSelectedRow(), 0));
+                    String fila = (String)jtPromocion
+                                  .getValueAt(jtPromocion.getSelectedRow(), 0);
+                    
+                    // Contempla is la fila seleccionada está vacía
+                    if(fila.equals("")) return;
+                    
+                    // Llena las tablas auxiliares
+                    int id = idParser(fila);
                     
                     Collection<Cliente> coll = facade
                                   .obtenerClientes(facade.obtenerPromocion(id));
@@ -1376,8 +1570,14 @@ public class Gui extends JFrame{
                 
                 if(e.getSource() == jtGenero){
                     
-                    int id = idParser((String)jtGenero
-                                     .getValueAt(jtGenero.getSelectedRow(), 0));
+                    String fila = (String)jtGenero
+                                     .getValueAt(jtGenero.getSelectedRow(), 0);
+                    
+                    // Contempla is la fila seleccionada está vacía
+                    if(fila.equals("")) return;
+                    
+                    // Llena las tablas auxiliares
+                    int id = idParser(fila);
                     Collection<Pelicula> coll = facade
                                     .obtenerPelicula(facade.obtenerGenero(id));
                     

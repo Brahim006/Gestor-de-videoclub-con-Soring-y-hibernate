@@ -31,8 +31,8 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
             
             session = HibernateSessionFactory.getSession();
         
-            String hql = "FROM Pelicula p WHERE p.idPelicula = ?";
-            Query q = session.createQuery(hql).setInteger(0, id);
+            String hql = "FROM Pelicula p WHERE p.idPelicula = :id";
+            Query q = session.createQuery(hql).setInteger("id", id);
 
             Pelicula ret = (Pelicula)q.uniqueResult();
 
@@ -59,8 +59,9 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
             
             session = HibernateSessionFactory.getSession();
             
-            String hql = "FROM Pelicula p WHERE p.titulo LIKE ?";
-            Query q = session.createQuery(hql).setString(0, titulo + "%");
+            String hql = "FROM Pelicula p WHERE p.titulo LIKE :titulo";
+            Query q = session.createQuery(hql)
+                             .setString("titulo", titulo + "%");
 
             Collection<Pelicula> ret = q.list();
 
