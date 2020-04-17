@@ -41,8 +41,6 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerGeneroPorId
@@ -71,8 +69,6 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerGeneroPorDescripcion
@@ -92,8 +88,6 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fir crearGenero
@@ -116,8 +110,6 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin borrarGenero
@@ -144,8 +136,6 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerTodosLosGeneros

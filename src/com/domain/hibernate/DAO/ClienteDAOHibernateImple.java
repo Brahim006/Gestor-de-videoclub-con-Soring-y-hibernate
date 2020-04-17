@@ -44,8 +44,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerClientePorID
@@ -73,8 +71,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin ObtenerClientePorNombre
@@ -101,8 +97,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de recursos
-            if(session != null) session.close();
         }
     
     } // fin obtenerClientesPorPelicula
@@ -130,8 +124,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de recursos
-            if(session != null) session.close();
         }
         
     } // fin obtenerClientesPorPromocion
@@ -152,8 +144,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally {
-            if(session != null) session.close();
         }
         
     } // fin crearCliente
@@ -174,8 +164,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally {
-            if(session != null) session.close();
         }
         
     } // fin borrarCliente
@@ -202,8 +190,6 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally {
-            if(session != null) session.close();
         }
         
     } // fin obtenerTodosLosClientes

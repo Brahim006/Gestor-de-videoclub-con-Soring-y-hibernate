@@ -42,8 +42,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerPromocionPorId
@@ -71,8 +69,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerPromocionPorMonto
@@ -104,8 +100,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerPromocionPorRango
@@ -133,8 +127,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerPromocionesPorCliente
@@ -156,8 +148,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin crearPromocion
@@ -178,8 +168,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin borrarPromocion
@@ -207,8 +195,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerTodasLasPromociones
@@ -237,8 +223,6 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerPromocionPorDescripcion

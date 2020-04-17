@@ -49,8 +49,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerAlquilerPorCliente
@@ -78,8 +76,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerAlquilerPorPelicula
@@ -106,8 +102,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerAlquilerPorFecha
@@ -134,8 +128,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerAlquilerPorDias
@@ -163,8 +155,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerAlquilerPorPromocion
@@ -197,8 +187,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerAlquilerPorClavePrimaria
@@ -218,8 +206,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin crearAlquiler
@@ -239,8 +225,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin borarAlquiler
@@ -268,8 +252,6 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerTodosLosAlquileres

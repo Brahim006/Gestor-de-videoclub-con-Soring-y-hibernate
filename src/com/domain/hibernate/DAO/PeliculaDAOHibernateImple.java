@@ -43,8 +43,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerPeliculaPorId
@@ -73,8 +71,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerPeliculaPorTitulo
@@ -102,8 +98,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerPeliculasPorCliente
@@ -130,8 +124,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
     
     } // fin obtenerPeliculasPorGenero
@@ -152,8 +144,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin crearPelicula
@@ -174,8 +164,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin borrarPelicula
@@ -202,8 +190,6 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        } finally { // liberación de la sesión
-            if(session != null) session.close();
         }
         
     } // fin obtenerTodasLasPeliculas
