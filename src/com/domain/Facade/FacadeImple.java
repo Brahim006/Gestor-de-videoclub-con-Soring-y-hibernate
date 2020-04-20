@@ -6,7 +6,7 @@
 package com.domain.Facade;
 
 import com.domain.hibernate.DTO.*;
-import com.domain.hibernate.DAO.*;
+import com.domain.DAO.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -17,22 +17,16 @@ import java.util.Collection;
  */
 public class FacadeImple implements Facade {
     
-    private PeliculaDAOHibernateImple peliculaDAO;
-    private ClienteDAOHibernateImple clienteDAO;
-    private PromocionDAOHibernateImple promocionDAO;
-    private GeneroDAOHibernateImple generoDAO;
-    private AlquilerDAOHibernateImple alquilerDAO;
+    private PeliculaDAO peliculaDAO;
+    private ClienteDAO clienteDAO;
+    private PromocionDAO promocionDAO;
+    private GeneroDAO generoDAO;
+    private AlquilerDAO alquilerDAO;
     
     /**
      * Crea un objeto FacadeImple inicializando todos sus DAOs
      */
-    public FacadeImple(){
-        peliculaDAO = new PeliculaDAOHibernateImple();
-        clienteDAO = new ClienteDAOHibernateImple();
-        promocionDAO = new PromocionDAOHibernateImple();
-        generoDAO = new GeneroDAOHibernateImple();
-        alquilerDAO = new AlquilerDAOHibernateImple();
-    }
+    public FacadeImple(){}
 
     @Override
     public Cliente obtenerCliente(int id) throws SQLException {
@@ -233,6 +227,48 @@ public class FacadeImple implements Facade {
     public Collection<Pelicula> obtenerPelicula(Genero genero) 
                                                            throws SQLException {
         return peliculaDAO.obtenerPeliculasPorGenero(genero);
+    }
+    
+    // Setters y getters para los DAOs
+
+    public void setPeliculaDAO(PeliculaDAO peliculaDAO) {
+        this.peliculaDAO = peliculaDAO;
+    }
+
+    public void setClienteDAO(ClienteDAO clienteDAO) {
+        this.clienteDAO = clienteDAO;
+    }
+
+    public void setPromocionDAO(PromocionDAO promocionDAO) {
+        this.promocionDAO = promocionDAO;
+    }
+
+    public void setGeneroDAO(GeneroDAO generoDAO) {
+        this.generoDAO = generoDAO;
+    }
+
+    public void setAlquilerDAO(AlquilerDAO alquilerDAO) {
+        this.alquilerDAO = alquilerDAO;
+    }
+
+    public PeliculaDAO getPeliculaDAO() {
+        return peliculaDAO;
+    }
+
+    public ClienteDAO getClienteDAO() {
+        return clienteDAO;
+    }
+
+    public PromocionDAO getPromocionDAO() {
+        return promocionDAO;
+    }
+
+    public GeneroDAO getGeneroDAO() {
+        return generoDAO;
+    }
+
+    public AlquilerDAO getAlquilerDAO() {
+        return alquilerDAO;
     }
     
 }

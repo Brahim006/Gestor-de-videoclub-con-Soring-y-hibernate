@@ -29,6 +29,8 @@ import com.domain.gui.utils.InputVerifier;
 import com.domain.Facade.Facade;
 import com.domain.Facade.FacadeImple;
 import com.domain.hibernate.DTO.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -79,7 +81,9 @@ public class Gui extends JFrame{
     public Gui(){
         super("Gestor Videoclub");
         
-        facade = new FacadeImple();
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+        
+        facade = (Facade)ctx.getBean("FACADE");
         botonListener = new BotonListener();
         textfieldListener = new TextFieldListener();
         tableListener = new TableListener();

@@ -9,12 +9,14 @@ import com.domain.hibernate.DTO.Pelicula;
 import com.domain.hibernate.DTO.Promocion;
 import java.sql.SQLException;
 import java.util.Collection;
+import javax.transaction.Transactional;
 // Imports para el uso de los frameworks
-import com.domain.hibernate.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.hibernate.JDBCException;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -22,15 +24,18 @@ import org.hibernate.JDBCException;
  */
 public class ClienteDAOHibernateImple implements ClienteDAO {
 
+    @Autowired
+    private SessionFactory sessionFactory; 
     
     @Override
+    @Transactional
     public Cliente obtenerClientePorId(int id) throws SQLException {
     
         Session session = null;
         
         try{
             // consulta
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Cliente c WHERE c.idCliente = :id";
             Query q = session.createQuery(hql).setInteger("id", id);
@@ -49,13 +54,14 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin obtenerClientePorID
 
     @Override
+    @Transactional
     public Collection<Cliente> obtenerClientePorNombre(String nombre) 
                                                         throws SQLException {
     
         Session session = null;
         
         try{ // consulta
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Cliente c WHERE c.nombre LIKE :nombre";
             Query q = session.createQuery(hql)
@@ -76,6 +82,7 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin ObtenerClientePorNombre
 
     @Override
+    @Transactional
     public Collection<Cliente> obtenerClientesPorPelicula(Pelicula pelicula) 
                                                         throws SQLException {
     
@@ -83,7 +90,7 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         
         try{
             // consulta
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             Pelicula p = (Pelicula)session.get(Pelicula.class, 
                                                pelicula.getIdPelicula());
@@ -102,6 +109,7 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin obtenerClientesPorPelicula
 
     @Override
+    @Transactional
     public Collection<Cliente> obtenerClientesPorPromocion(Promocion promocion) 
                                                         throws SQLException {
  
@@ -109,7 +117,7 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         
         try {
             // consulta
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             Promocion p = (Promocion)session.get(Promocion.class, 
                                                  promocion.getIdPromocion());
@@ -129,16 +137,14 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin obtenerClientesPorPromocion
     
     @Override
+    @Transactional
     public void crearOActualizarCliente(Cliente cliente) throws SQLException {
     
         Session session = null;
 
         try { 
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.saveOrUpdate(cliente);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -149,16 +155,14 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin crearCliente
     
     @Override
+    @Transactional
     public void borrarCliente(Cliente cliente) throws SQLException {
         
         Session session = null;
         
         try { // Commitea la transacción
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.delete(cliente);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -169,13 +173,14 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
     } // fin borrarCliente
 
     @Override
+    @Transactional
     public Collection<Cliente> obtenerTodosLosClientes() throws SQLException {
     
         Session session = null;
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Cliente";
             Query q = session.createQuery(hql);
@@ -193,5 +198,15 @@ public class ClienteDAOHibernateImple implements ClienteDAO {
         }
         
     } // fin obtenerTodosLosClientes
+    
+    // Setter y getter para inyectar el SessionFactory
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
     
 }

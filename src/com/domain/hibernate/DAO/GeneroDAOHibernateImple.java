@@ -7,12 +7,13 @@ import com.domain.DAO.GeneroDAO;
 import com.domain.hibernate.DTO.Genero;
 import java.sql.SQLException;
 import java.util.Collection;
+import javax.transaction.Transactional;
 // Imports para el uso de los frameworks
-import com.domain.hibernate.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.hibernate.Query;
-import org.hibernate.Transaction;
 import org.hibernate.JDBCException;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -20,14 +21,18 @@ import org.hibernate.JDBCException;
  */
 public class GeneroDAOHibernateImple implements GeneroDAO {
 
+    @Autowired
+    private SessionFactory sessionFactory; 
+    
     @Override
+    @Transactional
     public Genero obtenerGeneroPorId(int id) throws SQLException {
     
         Session session = null;
         
         try {
             // consulta
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Genero g WHERE g.idGenero = :id";
             Query q = session.createQuery(hql).setInteger("id", id);
@@ -46,6 +51,7 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
     } // fin obtenerGeneroPorId
 
     @Override
+    @Transactional
     public Collection<Genero> obtenerGeneroPorDescripcion(String descripcion) 
                                                         throws SQLException {
     
@@ -53,7 +59,7 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         
         try {
             // consulta
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Genero g WHERE g.descripcion LIKE :desc";
             Query q = session.createQuery(hql)
@@ -74,36 +80,33 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
     } // fin obtenerGeneroPorDescripcion
 
     @Override
+    @Transactional
     public void crearOActualizarGenero(Genero genero) throws SQLException {
     
         Session session  = null;
  
         try {
-            session = HibernateSessionFactory.getSession();
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.saveOrUpdate(genero);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException();
-        }
+        } 
         
     } // fir crearGenero
 
     @Override
+    @Transactional
     public void borrarGenero(Genero genero) throws SQLException {
     
         Session session = null;
         
         try {
             
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.delete(genero);
-            tr.commit();
             
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
@@ -115,13 +118,14 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
     } // fin borrarGenero
 
     @Override
+    @Transactional
     public Collection<Genero> obtenerTodosLosGeneros() throws SQLException {
     
         Session session = null;
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Genero";
             Query q = session.createQuery(hql);
@@ -139,5 +143,15 @@ public class GeneroDAOHibernateImple implements GeneroDAO {
         }
     
     } // fin obtenerTodosLosGeneros
+    
+    // Setter y getter para inyectar el SessionFactory
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
     
 }

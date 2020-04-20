@@ -12,12 +12,14 @@ import com.domain.hibernate.DTO.Promocion;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Collection;
+import javax.transaction.Transactional;
 // Imports para el uso de los frameworks
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.hibernate.JDBCException;
-import com.domain.hibernate.HibernateSessionFactory;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -25,7 +27,11 @@ import com.domain.hibernate.HibernateSessionFactory;
  */
 public class AlquilerDAOHibernateImple implements AlquilerDAO{
 
+    @Autowired
+    private SessionFactory sessionFactory; 
+    
     @Override
+    @Transactional
     public Collection<Alquiler> obtenerAlquilerPorCliente(Cliente cliente) 
                                                         throws SQLException {
     
@@ -33,7 +39,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Alquiler a WHERE a.pk.idCliente = :id";
             Query q = session.createQuery(hql)
@@ -54,6 +60,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorCliente
 
     @Override
+    @Transactional
     public Collection<Alquiler> obtenerAlquilerPorPelicula(Pelicula pelicula) 
                                                         throws SQLException {
     
@@ -61,7 +68,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             String hql = "FROM Alquiler a WHERE a.pk.idPelicula = :id";
             Query q = session.createQuery(hql)
                              .setInteger("id", pelicula.getIdPelicula());
@@ -81,6 +88,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorPelicula
 
     @Override
+    @Transactional
     public Collection<Alquiler> obtenerAlquilerPorFecha(Date fecha) 
                                                         throws SQLException {
     
@@ -88,7 +96,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             String hql = "FROM Alquiler a WHERE a.pk.fecha = :date";
             Query q = session.createQuery(hql).setDate("date", fecha);
 
@@ -107,6 +115,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorFecha
 
     @Override
+    @Transactional
     public Collection<Alquiler> obtenerAlquilerPorDias(int dias) 
                                                         throws SQLException {
     
@@ -114,7 +123,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             String hql = "FROM Alquiler a WHERE a.dias = :dias";
             Query q = session.createQuery(hql).setInteger("dias", dias);
 
@@ -133,6 +142,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorDias
 
     @Override
+    @Transactional
     public Collection<Alquiler> obtenerAlquilerPorPromocion(Promocion promocion) 
                                                         throws SQLException {
     
@@ -140,7 +150,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             String hql = "FROM Alquiler a WHERE a.idPromocion = :id";
             Query q = session.createQuery(hql)
                              .setInteger("id", promocion.getIdPromocion());
@@ -160,6 +170,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorPromocion
 
     @Override
+    @Transactional
     public Alquiler obtenerAlquilerPorClavePrimaria(AlquilerPK pk) 
                                                         throws SQLException {
     
@@ -167,7 +178,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String sql = "FROM Alquiler a WHERE a.pk.idPelicula = :idP " +
                     "AND a.pk.idCliente = :idC " +
@@ -192,15 +203,14 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin obtenerAlquilerPorClavePrimaria
 
     @Override
+    @Transactional
     public void crearOActualizarAlquiler(Alquiler alquiler) throws SQLException{
     
         Session session = null;
         
         try {
-            session = HibernateSessionFactory.getSession();
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.saveOrUpdate(alquiler);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -211,15 +221,14 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin crearAlquiler
 
     @Override
+    @Transactional
     public void borrarAlquiler(Alquiler alquiler) throws SQLException {
     
         Session session = null;
         
         try {
-            session = HibernateSessionFactory.getSession();
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.delete(alquiler);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -230,6 +239,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
     } // fin borarAlquiler
 
     @Override
+    @Transactional
     public Collection<Alquiler> obtenerTodosLosAlquileres() 
                                                         throws SQLException {
     
@@ -237,7 +247,7 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
 
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Alquiler";
             Query q = session.createQuery(hql);
@@ -255,5 +265,15 @@ public class AlquilerDAOHibernateImple implements AlquilerDAO{
         }
         
     } // fin obtenerTodosLosAlquileres
+    
+    // Setter y getter para inyectar el SessionFactory
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
     
 }

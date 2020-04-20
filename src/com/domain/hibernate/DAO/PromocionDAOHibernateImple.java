@@ -8,12 +8,14 @@ import com.domain.hibernate.DTO.Cliente;
 import com.domain.hibernate.DTO.Promocion;
 import java.sql.SQLException;
 import java.util.Collection;
+import javax.transaction.Transactional;
 // Imports para el funcionamiento del framework
 import org.hibernate.Session;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.hibernate.JDBCException;
-import com.domain.hibernate.HibernateSessionFactory;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -21,14 +23,18 @@ import com.domain.hibernate.HibernateSessionFactory;
  */
 public class PromocionDAOHibernateImple implements PromocionDAO {
 
+    @Autowired
+    private SessionFactory sessionFactory;
+    
     @Override
+    @Transactional
     public Promocion obtenerPromocionPorId(int id) throws SQLException {
     
         Session session = null;
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Promocion p WHERE p.idPromocion = :id";
             Query q = session.createQuery(hql).setInteger("id", id);
@@ -47,6 +53,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin obtenerPromocionPorId
 
     @Override
+    @Transactional
     public Collection<Promocion> obtenerPromocionPorMonto(int monto) 
                                                           throws SQLException {
     
@@ -54,7 +61,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Promocion p WHERE p.descuento = :monto";
             Query q = session.createQuery(hql).setInteger("monto", monto);
@@ -74,6 +81,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin obtenerPromocionPorMonto
 
     @Override
+    @Transactional
     public Collection<Promocion> obtenerPromocionPorRango(int min, int max) 
                                                           throws SQLException {
     
@@ -81,7 +89,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Promocion p WHERE p.descuento >= :min " + 
                     "AND p.descuento <= :max";
@@ -105,6 +113,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin obtenerPromocionPorRango
 
     @Override
+    @Transactional
     public Collection<Promocion> obtenerPromocionesPorCliente(Cliente cliente) 
                                                           throws SQLException {
     
@@ -112,7 +121,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             Cliente c = (Cliente)session.get(Cliente.class, cliente
                                                                .getIdCliente());
@@ -132,17 +141,15 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin obtenerPromocionesPorCliente
     
     @Override
+    @Transactional
     public void crearOActualizarPromocion(Promocion promocion) 
                                                           throws SQLException {
     
         Session session = null;
 
         try {
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.saveOrUpdate(promocion);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -153,16 +160,14 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin crearPromocion
 
     @Override
+    @Transactional
     public void borrarPromocion(Promocion promocion) throws SQLException {
     
         Session session = null;
         
         try {
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.delete(promocion);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -173,6 +178,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin borrarPromocion
 
     @Override
+    @Transactional
     public Collection<Promocion> obtenerTodasLasPromociones() 
                                                         throws SQLException {
     
@@ -180,7 +186,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Promocion";
             Query q = session.createQuery(hql);
@@ -200,6 +206,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
     } // fin obtenerTodasLasPromociones
 
     @Override
+    @Transactional
     public Collection<Promocion> obtenerPromocionPorDescripcion
                                     (String descripcion) throws SQLException {
         
@@ -207,7 +214,7 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Promocion p WHERE p.descripcion LIKE :desc";
             Query q = session.createQuery(hql)
@@ -226,5 +233,15 @@ public class PromocionDAOHibernateImple implements PromocionDAO {
         }
         
     } // fin obtenerPromocionPorDescripcion
+    
+    // Setter y getter para inyectar el SessionFactory
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
     
 }

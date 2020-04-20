@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/beans    
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    
+    <context:component-scan base-package="com.domain" />
+    
+    <!-- Beans para gestionar la conección a base de datos y clases mapeadas -->
+    <bean id="dataSourceBasico" 
+        class="org.apache.commons.dbcp2.BasicDataSource"
+        destroy-method="close">
+          <property name="driverClassName" value="org.hsqldb.jdbc.JDBCDriver" />
+          <property name="url" 
+                    value="jdbc:hsqldb:hsql://localhost/gestorvideosdb" />
+          <property name="username" value="sa" />
+          <property name="password" value="" />
+    </bean>
+    
+    <bean id="sessionFactoryBasico"
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceBasico"/>
+        <property name="packagesToScan" value="com.domain.hibernate.DTO" />   
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.HSQLDialect
+                </prop>
+                <prop key="hibernate.show_sql">true</prop>  
+                <prop key="hibernate.hbm2ddl.auto">create-drop</prop>              
+            </props>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.domain.hibernate.DTO.Cliente</value>
+                <value>com.domain.hibernate.DTO.Pelicula</value>
+                <value>com.domain.hibernate.DTO.Promocion</value>
+                <value>com.domain.hibernate.DTO.Genero</value>
+                <value>com.domain.hibernate.DTO.Alquiler</value>
+            </list>
+        </property>
+    </bean>
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager" 
+          p:sessionFactory-ref="sessionFactoryBasico">
+    </bean>
+    
+    <!-- Inyección de beans para uso en la aplicación -->
+    
+    <bean name="FACADE" class="com.domain.Facade.FacadeImple">
+        <property name="peliculaDAO" ref="PeliculaDAO" />
+        <property name="clienteDAO" ref="ClienteDAO" />
+        <property name="generoDAO" ref="GeneroDAO" />
+        <property name="promocionDAO" ref="PromocionDAO" />
+        <property name="alquilerDAO" ref="AlquilerDAO" />
+    </bean>
+    
+    <bean name="PeliculaDAO" 
+          class="com.domain.hibernate.DAO.PeliculaDAOHibernateImple">
+        <property name="sessionFactory" ref="sessionFactoryBasico"/>
+    </bean>
+    
+    <bean name="ClienteDAO" 
+          class="com.domain.hibernate.DAO.ClienteDAOHibernateImple">
+        <property name="sessionFactory" ref="sessionFactoryBasico"/>
+    </bean>
+    
+    <bean name="GeneroDAO" 
+          class="com.domain.hibernate.DAO.GeneroDAOHibernateImple">
+        <property name="sessionFactory" ref="sessionFactoryBasico"/>
+    </bean>
+    
+    <bean name="PromocionDAO" 
+          class="com.domain.hibernate.DAO.PromocionDAOHibernateImple">
+        <property name="sessionFactory" ref="sessionFactoryBasico"/>
+    </bean>
+    
+    <bean name="AlquilerDAO" 
+          class="com.domain.hibernate.DAO.AlquilerDAOHibernateImple">
+        <property name="sessionFactory" ref="sessionFactoryBasico"/>
+    </bean>
+    
+</beans>

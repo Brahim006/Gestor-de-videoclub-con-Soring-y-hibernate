@@ -9,12 +9,13 @@ import com.domain.hibernate.DTO.Genero;
 import com.domain.hibernate.DTO.Pelicula;
 import java.sql.SQLException;
 import java.util.Collection;
+import javax.transaction.Transactional;
 // Imports para el uso de los frameworks
 import org.hibernate.Session;
 import org.hibernate.Query;
-import org.hibernate.Transaction;
 import org.hibernate.JDBCException;
-import com.domain.hibernate.HibernateSessionFactory;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -22,14 +23,18 @@ import com.domain.hibernate.HibernateSessionFactory;
  */
 public class PeliculaDAOHibernateImple implements PeliculaDAO {
 
+    @Autowired
+    private SessionFactory sessionFactory;
+    
     @Override
+    @Transactional
     public Pelicula obtenerPeliculaPorId(int id) throws SQLException {
     
         Session session = null;
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             String hql = "FROM Pelicula p WHERE p.idPelicula = :id";
             Query q = session.createQuery(hql).setInteger("id", id);
@@ -48,6 +53,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin obtenerPeliculaPorId
 
     @Override
+    @Transactional
     public Collection<Pelicula> obtenerPeliculaPorTitulo(String titulo) 
                                                         throws SQLException {
     
@@ -55,7 +61,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Pelicula p WHERE p.titulo LIKE :titulo";
             Query q = session.createQuery(hql)
@@ -76,6 +82,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin obtenerPeliculaPorTitulo
 
     @Override
+    @Transactional
     public Collection<Pelicula> obtenerPeliculasPorCliente(Cliente cliente) 
                                                         throws SQLException {
     
@@ -83,7 +90,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
         
             Cliente c = (Cliente)session
                                     .get(Cliente.class, cliente.getIdCliente());
@@ -103,6 +110,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin obtenerPeliculasPorCliente
     
     @Override
+    @Transactional
     public Collection<Pelicula> obtenerPeliculasPorGenero(Genero genero) 
                                                         throws SQLException {
     
@@ -110,7 +118,7 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             Genero g = (Genero)session.get(Genero.class, genero.getIdGenero());
             
@@ -129,16 +137,14 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin obtenerPeliculasPorGenero
     
     @Override
+    @Transactional
     public void crearOActualizarPelicula(Pelicula pelicula) throws SQLException{
     
         Session session = null;
         
         try {
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.saveOrUpdate(pelicula);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -149,16 +155,14 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin crearPelicula
 
     @Override
+    @Transactional
     public void borrarPelicula(Pelicula pelicula) throws SQLException {
     
         Session session = null;
         
         try {
-            session = HibernateSessionFactory.getSession();
-        
-            Transaction tr = session.beginTransaction();
+            session = sessionFactory.getCurrentSession();
             session.delete(pelicula);
-            tr.commit();
         } catch (JDBCException je) { // SQLException devuelta al facade
             throw je.getSQLException();
         } catch (Exception e){
@@ -169,13 +173,14 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
     } // fin borrarPelicula
 
     @Override
+    @Transactional
     public Collection<Pelicula> obtenerTodasLasPeliculas() throws SQLException {
     
         Session session = null;
         
         try {
             
-            session = HibernateSessionFactory.getSession();
+            session = sessionFactory.getCurrentSession();
             
             String hql = "FROM Pelicula";
             Query q = session.createQuery(hql);
@@ -193,5 +198,15 @@ public class PeliculaDAOHibernateImple implements PeliculaDAO {
         }
         
     } // fin obtenerTodasLasPeliculas
+    
+    // Setter y getter para inyectar el SessionFactory
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
     
 }
