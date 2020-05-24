@@ -10,4 +10,4 @@ Los scripts usados para la creación de las tablas dentro de la base de datos se
 scriptSQL-creacion-tablas, mientras que los scripts para relacionar las tablas mediante claves foráneas están
 dentro del archivo scriptSQL-creacion-llaves-foraneas.
 
-El ejecutable se encuentra dentro de la carpeta dist, junto con los .jar de las librerías usadas en el proyecto.
+El ejecutable se encuentra dentro de la carpeta dist, junto con los .jar de las librerías usadas en el proyecto, para su correcto funcionamiento es necesario que se haya iniciado una base de datos HSQL con las tablas y las relaciones indicadas por los scripts sql.
